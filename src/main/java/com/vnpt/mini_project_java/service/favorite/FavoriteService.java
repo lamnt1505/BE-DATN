@@ -8,4 +8,6 @@ public interface FavoriteService {
     String addProductToFavorite(Long accountID, Long productID);
 
     List<FavoriteDTO> getFavoritesByAccountId(Long accountId);
+
+    boolean removeFavorite(Long accountId, Long productId);
 }

@@ -3,6 +3,8 @@ package com.vnpt.mini_project_java.restcontroller;
 import com.vnpt.mini_project_java.config.VnpayConfig;
 import com.vnpt.mini_project_java.dto.*;
 import com.vnpt.mini_project_java.entity.*;
+import com.vnpt.mini_project_java.respository.DiscountRepository;
+import com.vnpt.mini_project_java.respository.DiscountUsageRepository;
 import com.vnpt.mini_project_java.service.account.AccountService;
 import com.vnpt.mini_project_java.service.discount.DiscountService;
 import com.vnpt.mini_project_java.service.favorite.FavoriteService;
@@ -37,6 +39,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,6 +71,12 @@ public class HomeRestController {
 
     @Autowired
     private DiscountService discountService;
+
+    @Autowired
+    DiscountRepository discountRepository;
+
+    @Autowired
+    DiscountUsageRepository discountUsageRepository;
 
     private void logToConsoleAndFile(String message) {
         Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -400,6 +409,30 @@ public class HomeRestController {
         return new ResponseEntity<>(favoriteProducts, HttpStatus.OK);
     }
 
+    @DeleteMapping("/dossier-statistic/{accountId}/{productId}")
+    public ResponseEntity<?> removeFavorite(@PathVariable Long accountId, @PathVariable Long productId) {
+        try {
+            boolean removed = favoriteService.removeFavorite(accountId, productId);
+
+            Map<String, Object> response = new HashMap<>();
+            if (removed) {
+                response.put("success", true);
+                response.put("message", "Đã xóa sản phẩm khỏi danh sách yêu thích");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy sản phẩm trong danh sách yêu thích");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Lỗi hệ thống: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
     @PostMapping(value = "/dossier-statistic/add--vote")
     public ResponseEntity<?> createVote(@RequestBody ProductVoteDTO voteDTO) {
         try {
@@ -425,6 +458,25 @@ public class HomeRestController {
                 response.put("message", "Mã giảm giá không được để trống.");
                 return ResponseEntity.badRequest().body(response);
             }
+            Discount discount = discountRepository.findByDiscountCode(discountCode).orElse(null);
+            if (discount == null) {
+                response.put("success", false);
+                response.put("message", "Mã giảm giá không hợp lệ hoặc không tồn tại!");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (!discount.getActive()) {
+                response.put("success", false);
+                response.put("message", "Mã giảm giá đã bị vô hiệu hoá!");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            LocalDate today = LocalDate.now();
+            if (discount.getDateStart().isAfter(today) || discount.getDateFinish().isBefore(today)) {
+                response.put("success", false);
+                response.put("message", "Mã giảm giá đã hết hạn hoặc chưa tới ngày bắt đầu!");
+                return ResponseEntity.badRequest().body(response);
+            }
             if (!discountService.existsByCode(discountCode)) {
                 response.put("success", false);
                 response.put("message", "Mã giảm giá không hợp lệ hoặc đã hết hạn!");
@@ -440,6 +492,7 @@ public class HomeRestController {
 
             List<Map<String, Object>> discountedProducts = new ArrayList<>();
             double discountedTotal = 0.0;
+            double totalDiscountAmount = 0.0;
 
             for (Map<String, Object> product : products) {
                 String productID = product.get("productID").toString();
@@ -447,6 +500,8 @@ public class HomeRestController {
                 int quantity = Integer.parseInt(product.get("quantity").toString());
 
                 double discountedPrice = discountService.applyDiscount(price, discountCode);
+                double discountAmount = (price - discountedPrice) * quantity;
+                totalDiscountAmount += discountAmount;
                 discountedTotal += discountedPrice * quantity;
 
                 Map<String, Object> discountedProduct = new HashMap<>();
@@ -456,6 +511,12 @@ public class HomeRestController {
                 discountedProduct.put("quantity", quantity);
                 discountedProducts.add(discountedProduct);
             }
+            DiscountUsage usage = new DiscountUsage();
+            usage.setDiscount(discount);
+            usage.setDiscountedAmount(totalDiscountAmount);
+            usage.setUsedAt(LocalDateTime.now());
+            discountUsageRepository.save(usage);
+
             session.setAttribute("discountedTotal", discountedTotal);
 
             response.put("success", true);

@@ -32,6 +32,9 @@ public class Discount {
 
     private String discountCode;
 
+    @Column(nullable = false)
+    private Boolean active = true;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore

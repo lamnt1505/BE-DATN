@@ -76,6 +76,9 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Discount> discounts = new HashSet<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Favorite> favorites = new HashSet<>();
+
     private String getImagesDir() {
         return System.getProperty("user.dir") + "/src/main/resources/static/images";
     }

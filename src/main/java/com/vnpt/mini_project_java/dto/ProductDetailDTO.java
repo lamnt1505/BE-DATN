@@ -1,13 +1,14 @@
 package com.vnpt.mini_project_java.dto;
 
 import com.vnpt.mini_project_java.entity.ProductDetail;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
 @Data
+@AllArgsConstructor
 public class ProductDetailDTO {
 
     private Long productDetailID;
@@ -22,6 +23,10 @@ public class ProductDetailDTO {
 
     private Long productID;
 
+    private DetailDTO detail;
+
+    private List<VersionDTO> versions;
+
     public ProductDetailDTO() {
     }
 
@@ -34,4 +39,21 @@ public class ProductDetailDTO {
         this.productID = productDetail.getProduct().getProductID();
     }
 
+    @Data
+    @AllArgsConstructor
+    public static class DetailDTO {
+        private String camera;
+        private String wifi;
+        private String screen;
+        private String bluetooth;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class VersionDTO {
+        private Long versionID;
+        private String color;
+        private String memory;
+        private String image1;
+    }
 }

@@ -134,4 +134,9 @@ public class OrderServiceImpl implements OrderService {
     public List<PaymentStatisticDTO> getPaymentStatistics() {
         return orderRepository.getPaymentStatistics();
     }
+
+    @Override
+    public List<Map<String, Object>> getProfitByDate(LocalDate startDate, LocalDate endDate) {
+        return orderRepository.getProfitStatisticsByDate(startDate, endDate);
+    }
 }

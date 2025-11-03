@@ -6,6 +6,7 @@ import com.vnpt.mini_project_java.projections.StatisticalForMonthProjections;
 import com.vnpt.mini_project_java.projections.StatisticalForQuarterProjections;
 import com.vnpt.mini_project_java.projections.StatisticalForYearProjections;
 import com.vnpt.mini_project_java.projections.StatisticalProductProjections;
+import com.vnpt.mini_project_java.respository.DiscountUsageRepository;
 import com.vnpt.mini_project_java.service.order.OrderService;
 import com.vnpt.mini_project_java.service.statistical.StatisticalService;
 import com.vnpt.mini_project_java.util.ExcelUtil;
@@ -13,28 +14,36 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/export")
+@RequestMapping(value = "/api/export", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StatisticalRestController {
 
     private final StatisticalService statisticsService;
 
     private final OrderService orderService;
 
-    public StatisticalRestController(StatisticalService statisticsService, OrderService orderService) {
+    private final DiscountUsageRepository discountUsageRepository;
+
+    public StatisticalRestController(StatisticalService statisticsService, OrderService orderService, DiscountUsageRepository discountUsageRepository) {
         this.statisticsService = statisticsService;
         this.orderService = orderService;
+        this.discountUsageRepository = discountUsageRepository;
     }
 
     @GetMapping("/product")
@@ -225,4 +234,26 @@ public class StatisticalRestController {
         }
     }
 
+    @GetMapping("/profit")
+    public List<Map<String, Object>> getProfitStatistics(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        return orderService.getProfitByDate(startDate, endDate);
+    }
+
+    @GetMapping("/statistics/discount")
+    public ResponseEntity<List<Map<String, Object>>> getDiscountStatistics() {
+        List<Object[]> stats = discountUsageRepository.getDiscountStatistics();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Object[] row : stats) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("discountName", row[0]);
+            map.put("usageCount", row[1]);
+            map.put("totalDiscountedAmount", row[2]);
+            result.add(map);
+        }
+        return ResponseEntity.ok(result);
+    }
 }

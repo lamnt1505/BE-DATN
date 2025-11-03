@@ -1,6 +1,5 @@
 package com.vnpt.mini_project_java.dto;
 
-import com.vnpt.mini_project_java.entity.Product;
 import com.vnpt.mini_project_java.entity.ProductVersion;
 import lombok.Data;
 import lombok.Getter;

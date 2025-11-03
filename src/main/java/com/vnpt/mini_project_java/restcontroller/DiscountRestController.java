@@ -46,6 +46,90 @@ public class DiscountRestController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateDiscount(@PathVariable Long id, @RequestBody DiscountDTO discountDTO) {
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Discount updated = discountService.updateDiscount(id, discountDTO);
+            if (updated == null) {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy mã giảm giá để cập nhật!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            response.put("success", true);
+            response.put("message", "Cập nhật mã giảm giá thành công!");
+            response.put("data", new DiscountDTO(
+                    updated,
+                    updated.getDiscountID(),
+                    updated.getDiscountName(),
+                    updated.getDiscountPercent(),
+                    updated.getDateStart().toString(),
+                    updated.getDateFinish().toString(),
+                    updated.getDiscountCode(),
+                    updated.getProduct() != null ? updated.getProduct().getProductID() : null
+            ));
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Lỗi khi cập nhật mã giảm giá!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteDiscount(@PathVariable("id") Long id) {
+        Map<String, Object> response = new HashMap<>();
+
+        boolean deleted = discountService.deleteDiscount(id);
+        if (!deleted) {
+            response.put("success", false);
+            response.put("message", "Không tìm thấy mã giảm giá để xóa!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        response.put("success", true);
+        response.put("message", "Xóa mã giảm giá thành công!");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/get")
+    public ResponseEntity<Map<String, Object>> getDiscountById(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Discount discount = discountService.findById(id);
+            if (discount == null) {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy mã giảm giá!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            DiscountDTO dto = new DiscountDTO(
+                    discount,
+                    discount.getDiscountID(),
+                    discount.getDiscountName(),
+                    discount.getDiscountPercent(),
+                    discount.getDateStart().toString(),
+                    discount.getDateFinish().toString(),
+                    discount.getDiscountCode(),
+                    discount.getProduct() != null ? discount.getProduct().getProductID() : null
+            );
+
+            response.put("success", true);
+            response.put("data", dto);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Lỗi khi lấy chi tiết mã giảm giá!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
     @GetMapping("/getDiscountCode")
     public ResponseEntity<Map<String, Object>> getDiscountCode(HttpSession session) {
         String discountCode = (String) session.getAttribute("generatedDiscountCode");
@@ -80,5 +164,33 @@ public class DiscountRestController {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list")
+    public List<DiscountDTO> getAllDiscounts() {
+        return discountService.getAllDiscounts();
+    }
+
+    @PutMapping("/{id}/toggle")
+    public ResponseEntity<Map<String, Object>> toggleActive(@PathVariable Long id) {
+        try {
+            String message = discountService.toggleActive(id);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", message);
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("success", false);
+            error.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        } catch (Exception e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("success", false);
+            error.put("message", "Lỗi khi thay đổi trạng thái mã giảm giá!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
     }
 }

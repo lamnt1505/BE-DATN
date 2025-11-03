@@ -7,6 +7,7 @@ import com.vnpt.mini_project_java.dto.RevenueDTO;
 import com.vnpt.mini_project_java.entity.Order;
 //import com.vnpt.mini_project_java.models.StatisticalForProductProjections;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,4 +39,6 @@ public interface OrderService {
     Order findByTxnRef(String txnRef);
 
     List<PaymentStatisticDTO> getPaymentStatistics();
+
+    List<Map<String, Object>> getProfitByDate(LocalDate startDate, LocalDate endDate);
 }

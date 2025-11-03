@@ -1,8 +1,6 @@
 package com.vnpt.mini_project_java.service.product;
 
-import com.vnpt.mini_project_java.dto.ProductSearchCriteriaDTO;
-import com.vnpt.mini_project_java.dto.CompareProductDTO;
-import com.vnpt.mini_project_java.dto.ProductDTO;
+import com.vnpt.mini_project_java.dto.*;
 
 import com.vnpt.mini_project_java.entity.Product;
 
@@ -65,4 +63,8 @@ public interface ProductService {
     List<Product> searchListProductByIdCategory(String productName);
 
     Page<ProductDTO> getPaginatedProduct(Pageable pageable);
+
+    ProductDetailiDDTO getProductDetailWithVersionsDetails(Long id);
+
+    List<ProductDTO> getRelatedProducts(Long id);
 }

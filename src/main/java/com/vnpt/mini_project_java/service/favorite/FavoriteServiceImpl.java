@@ -65,4 +65,13 @@ public class FavoriteServiceImpl implements FavoriteService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean removeFavorite(Long accountId, Long productId) {
+        Optional<Favorite> favoriteOpt = favoriteRepository.findByAccount_AccountIDAndProduct_ProductID(accountId, productId);
+        if (favoriteOpt.isPresent()) {
+            favoriteRepository.delete(favoriteOpt.get());
+            return true;
+        }
+        return false;
+    }
 }

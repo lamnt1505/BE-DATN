@@ -1,24 +1,20 @@
 package com.vnpt.mini_project_java.service.product;
 
-import com.vnpt.mini_project_java.dto.ProductSearchCriteriaDTO;
+import com.vnpt.mini_project_java.dto.*;
+import com.vnpt.mini_project_java.entity.*;
+import com.vnpt.mini_project_java.respository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import com.vnpt.mini_project_java.dto.CompareProductDTO;
-import com.vnpt.mini_project_java.dto.ProductDTO;
-import com.vnpt.mini_project_java.entity.Category;
-import com.vnpt.mini_project_java.entity.Product;
-import com.vnpt.mini_project_java.entity.Trademark;
-import com.vnpt.mini_project_java.respository.CategoryRepository;
-import com.vnpt.mini_project_java.respository.ProductRepository;
-import com.vnpt.mini_project_java.respository.TrademarkReopsitory;
 import com.vnpt.mini_project_java.spec.ProductSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -38,16 +34,24 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private final TrademarkReopsitory trademarkReopsitory;
 
+    @Autowired
+    private final ProductDetailRepository  productDetailRepository;
+
+    @Autowired
+    private final ProductVersionRepository productVersionRepository;
+
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     public ProductServiceImpl(ProductRepository productRepository, TrademarkReopsitory trademarkReopsitory,
-                              CategoryRepository categoryRepository) {
+                              CategoryRepository categoryRepository, ProductDetailRepository  productDetailRepository, ProductVersionRepository productVersionRepository) {
         super();
         this.productRepository = productRepository;
         this.trademarkReopsitory = trademarkReopsitory;
         this.categoryRepository = categoryRepository;
+        this.productDetailRepository = productDetailRepository;
+        this.productVersionRepository = productVersionRepository;
     }
 
     @Override
@@ -288,5 +292,67 @@ public class ProductServiceImpl implements ProductService {
     public Page<ProductDTO> getPaginatedProduct(Pageable pageable) {
         return productRepository.findAll(pageable)
                 .map(ProductDTO::new);
+    }
+
+    @Override
+    public ProductDetailiDDTO getProductDetailWithVersionsDetails(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Sản phẩm không tồn tại"));
+
+        ProductDetailiDDTO dto = new ProductDetailiDDTO();
+
+        dto.setId(product.getProductID());
+        dto.setName(product.getProductName());
+        dto.setPrice(product.getPrice());
+        dto.setDescription(product.getDescription());
+        if (product.getImage() != null && !product.getImage().isEmpty()) {
+            try {
+                Path imagePath = Paths.get("src/main/resources/static/images/", product.getImage());
+                byte[] imageBytes = Files.readAllBytes(imagePath);
+                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                dto.setImage(base64Image);
+            } catch (IOException e) {
+                e.printStackTrace();
+                dto.setImage(null);
+            }
+        }
+        dto.setDateProduct(product.getDateProduct());
+        dto.setCategory(product.getCategory() != null ? product.getCategory().getCategoryName() : null);
+        dto.setTrademark(product.getTrademark() != null ? product.getTrademark().getTradeName() : null);
+
+        if (product.getProductDetails() != null && !product.getProductDetails().isEmpty()) {
+            ProductDetail firstDetail = product.getProductDetails().iterator().next();
+            dto.setDetail(new ProductDetailDTO(firstDetail));
+        }
+
+        if (product.getProductVersions() != null && !product.getProductVersions().isEmpty()) {
+            List<ProductVersionDTO> versions = product.getProductVersions().stream()
+                    .map(ProductVersionDTO::new)
+                    .collect(Collectors.toList());
+            dto.setVersions(versions);
+        } else {
+            dto.setVersions(Collections.emptyList());
+        }
+
+        return dto;
+    }
+
+    @Override
+    public List<ProductDTO> getRelatedProducts(Long id) {
+        Product current = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm!"));
+
+        Long categoryId = Optional.ofNullable(current.getCategory())
+                .map(c -> c.getCategoryID())
+                .orElse(null);
+
+        if (categoryId == null) return Collections.emptyList();
+
+        List<Product> related = productRepository
+                .findTop4ByCategory_CategoryIDAndProductIDNot(categoryId, current.getProductID());
+
+        return related.stream()
+                .map(ProductDTO::new)
+                .collect(Collectors.toList());
     }
 }

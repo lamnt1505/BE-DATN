@@ -8,7 +8,9 @@ import com.vnpt.mini_project_java.respository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -35,5 +37,10 @@ public class StatisticalServiceImpl implements StatisticalService {
     @Override
     public List<StatisticalForQuarterProjections> statisticalForQuarter() {
         return orderRepository.statisticalForQuarter();
+    }
+
+    @Override
+    public List<Map<String, Object>> getProfitByDate(LocalDate startDate, LocalDate endDate) {
+        return orderRepository.getProfitStatisticsByDate(startDate, endDate);
     }
 }

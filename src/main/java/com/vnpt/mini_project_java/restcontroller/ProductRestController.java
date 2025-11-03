@@ -2,6 +2,8 @@ package com.vnpt.mini_project_java.restcontroller;
 
 
 import com.vnpt.mini_project_java.dto.ProductDTO;
+import com.vnpt.mini_project_java.dto.ProductDetailDTO;
+import com.vnpt.mini_project_java.dto.ProductDetailiDDTO;
 import com.vnpt.mini_project_java.entity.Product;
 import com.vnpt.mini_project_java.entity.ProductDetail;
 import com.vnpt.mini_project_java.entity.ProductVersion;
@@ -244,6 +246,26 @@ public class ProductRestController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(productDTOs);
+    }
+
+    @GetMapping("/{id}/detail-full")
+    public ResponseEntity<?> getProductFullDetail(@PathVariable Long id) {
+        try {
+            ProductDetailiDDTO dto = productService.getProductDetailWithVersionsDetails(id);
+            return ResponseEntity.ok(dto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("message", "Lỗi khi lấy chi tiết sản phẩm"));
+        }
+    }
+
+    @GetMapping("/{id}/related")
+    public ResponseEntity<List<ProductDTO>> getRelatedProducts(@PathVariable Long id) {
+        List<ProductDTO> related = productService.getRelatedProducts(id);
+        return ResponseEntity.ok(related);
     }
 }
 

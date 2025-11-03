@@ -25,6 +25,8 @@ public class DiscountDTO {
 
     private Long productID;
 
+    private Boolean active;
+
     public DiscountDTO() {
     }
 
@@ -36,5 +38,6 @@ public class DiscountDTO {
         this.dateFinish = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(discount.getDateFinish());
         this.discountCode = discountCode;
         this.productID = productID;
+        this.active = discount.getActive();
     }
 }

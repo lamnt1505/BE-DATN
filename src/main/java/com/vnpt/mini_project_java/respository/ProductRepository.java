@@ -37,4 +37,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> findAll(Specification<Product> spec);
 
     boolean existsByproductNameIgnoreCase(String productName);
+
+    List<Product> findTop4ByCategory_CategoryIDAndProductIDNot(Long categoryID, Long productID);
 }

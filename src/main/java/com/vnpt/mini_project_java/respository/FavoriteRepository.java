@@ -14,4 +14,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     Optional<Favorite> findByAccountAndProduct(Account account, Product product);
 
     List<Favorite> findByAccount_AccountID(Long accountId);
+
+    Optional<Favorite> findByAccount_AccountIDAndProduct_ProductID(Long accountId, Long productId);
 }
