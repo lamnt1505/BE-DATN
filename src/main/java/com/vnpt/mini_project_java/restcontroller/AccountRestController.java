@@ -58,12 +58,17 @@ public class AccountRestController {
     public ResponseEntity<Map<String, String>> addAccount(@ModelAttribute AccountDTO accountDTO, @RequestParam("image") MultipartFile image) {
         try {
             String accountName = accountService.addAccount(accountDTO, image);
-            if (accountName == null) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("message", "Tài khoản đã tồn tại"));
-            }
-            return ResponseEntity.ok(Collections.singletonMap("message", "Tài khoản đã đăng ký thành công với ID: " + accountName));
+            return ResponseEntity.ok(Collections.singletonMap(
+                    "message", "Tài khoản đã đăng ký thành công với ID: " + accountName
+            ));
+        } catch (RuntimeException ex) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("message", ex.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("message", "Có lỗi xảy ra: " + e.getMessage()));
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("message", "Có lỗi xảy ra: " + e.getMessage()));
         }
     }
 

@@ -95,6 +95,10 @@ public class AccountServiceImpl implements AccountService {
 			throw new RuntimeException("Tài khoản đã tồn tại");
 		}
 
+		if (accountRepository.findByEmail(accountDTO.getEmail()) != null) {
+			throw new RuntimeException("Email đã được sử dụng");
+		}
+
 		Account account = new Account();
 
 		account.setAccountID(accountDTO.getAccountID());

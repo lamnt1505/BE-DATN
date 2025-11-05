@@ -15,12 +15,12 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query(value = "SELECT * FROM account  WHERE account_name = ?", nativeQuery = true)
     Optional<Account> findByname(String accountName);
 
-    Optional<Account> findByEmail(String email);
-
     @Query(value = "SELECT * FROM account  WHERE account_phone = ?", nativeQuery = true)
     Optional<Account> findByphone(String phone);
 
     Optional<Account> findOneByAccountNameAndAccountPass(String accountName, String accountPass);
     
     Account findByAccountName(String accountName);
+
+    Account findByEmail(String email);
 }

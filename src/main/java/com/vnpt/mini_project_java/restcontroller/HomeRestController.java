@@ -395,6 +395,16 @@ public class HomeRestController {
     @PostMapping(value ="/dossier-statistic/add--favorite")
     public ResponseEntity<String> addToFavorite(@RequestParam(required = false) Long accountID,
                                                 @RequestParam(required = false) Long productID) {
+        if (accountID == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("⚠️ Bạn cần đăng nhập để thêm sản phẩm yêu thích!");
+        }
+
+        if (productID == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Thiếu mã sản phẩm!");
+        }
+
         String result = favoriteService.addProductToFavorite(accountID, productID);
         HttpStatus status = result.contains("Đã thêm") ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(result, status);
