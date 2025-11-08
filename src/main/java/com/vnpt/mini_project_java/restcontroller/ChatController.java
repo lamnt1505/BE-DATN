@@ -11,11 +11,23 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
+
     @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(@RequestParam String sender, @RequestParam String content) {
+    public ResponseEntity<String> sendMessage(
+            @RequestParam String sender,
+            @RequestParam String content) {
         try {
+            String receiver;
+
+            if (sender.equalsIgnoreCase("Admin") && content.startsWith("(")) {
+                receiver = content.substring(1, content.indexOf(")")).trim();
+            } else {
+                receiver = sender;
+            }
+
             DatabaseReference ref = FirebaseDatabase.getInstance()
-                    .getReference("chat/conversations");
+                    .getReference("chat/conversations")
+                    .child(receiver);
 
             Map<String, Object> message = new HashMap<>();
             message.put("sender", sender);
@@ -23,11 +35,14 @@ public class ChatController {
             message.put("timestamp", System.currentTimeMillis());
 
             ref.push().setValueAsync(message);
-            return ResponseEntity.ok("Đã gửi thành công");
+
+            return ResponseEntity.ok("✅ Gửi tin nhắn thành công!");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Send failed");
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("❌ Lỗi gửi tin: " + e.getMessage());
         }
     }
+
     @GetMapping(value = "/messages", produces = "application/json")
     public ResponseEntity<?> getAllMessages() {
         try {
