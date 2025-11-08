@@ -1,5 +1,5 @@
 # ---------- BUILD STAGE ----------
-FROM eclipse-temurin:1.8-jdk-alpine AS build
+FROM eclipse-temurin:8-jdk-alpine AS build
 WORKDIR /app
 
 # Copy toàn bộ mã nguồn vào container
@@ -9,7 +9,7 @@ COPY . .
 RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
 # ---------- RUN STAGE ----------
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:8-jdk-alpine
 WORKDIR /app
 
 # Copy file JAR từ giai đoạn build
