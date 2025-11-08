@@ -140,7 +140,7 @@ public class CategoryRestController {
                     .map(p -> new CatalogResponseDTO(
                             p.getProductName(),
                             p.getPrice(),
-                            p.getImageBase64(),
+                            p.getImage(),
                             p.getProductID()
                     ))
                     .collect(Collectors.toList());

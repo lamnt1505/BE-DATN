@@ -20,20 +20,13 @@ public class CartItemDTO {
     private String name;
     private Double price;
     private Integer amount;
-    private String imageBase64;
+    private String image;
 
     public CartItemDTO(Product product) {
         this.productID = product.getProductID();
         this.name = product.getProductName();
         this.price = product.getPrice();
         this.amount = product.getAmount();
-
-        String imagePath = "src/main/resources/static/images/" + product.getImage();
-        try {
-            byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
-            this.imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
-        } catch (IOException e) {
-            this.imageBase64 = "";
-        }
+        this.image = product.getImage();
     }
 }

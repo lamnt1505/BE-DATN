@@ -54,10 +54,10 @@ public class AccountRestController {
         return ResponseEntity.ok(accountDTOS);
     }
 
-    @PostMapping(path = "/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Map<String, String>> addAccount(@ModelAttribute AccountDTO accountDTO, @RequestParam("image") MultipartFile image) {
+    @PostMapping(path = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> addAccount(@RequestBody AccountDTO accountDTO) {
         try {
-            String accountName = accountService.addAccount(accountDTO, image);
+            String accountName = accountService.addAccount(accountDTO);
             return ResponseEntity.ok(Collections.singletonMap(
                     "message", "Tài khoản đã đăng ký thành công với ID: " + accountName
             ));
@@ -72,17 +72,19 @@ public class AccountRestController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateAccount( @PathVariable("id") Long accountID, @ModelAttribute AccountDTO accountDTO,
-                                                 @RequestParam(value = "image", required = false) MultipartFile image) {
+    @PutMapping(path = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>>updateAccount( @PathVariable("id") Long accountID, @RequestBody AccountDTO accountDTO) {
         try {
             accountDTO.setAccountID(accountID);
-            accountService.updateAccount(accountID, accountDTO, image);
-            return ResponseEntity.ok("Cập nhật tài khoản thành công");
+            accountService.updateAccount(accountID, accountDTO);
+            return ResponseEntity.ok(Collections.singletonMap("message", "Cập nhật tài khoản thành công ✅"));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("message", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra khi cập nhật tài khoản");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("message", "Có lỗi xảy ra khi cập nhật tài khoản ❌"));
         }
     }
 

@@ -32,7 +32,7 @@ public class AccountDTO {
 
     private String dateOfBirth;
 
-    private String imageBase64;
+    private String image;
 
     private String local;
 
@@ -41,7 +41,7 @@ public class AccountDTO {
     private boolean isAdmin;
 
     public AccountDTO(Long accountID, String accountName, Object o, String username, String phoneNumber,
-                      LocalDate dateOfBirth, String imageBase64, String local, String email) {
+                      LocalDate dateOfBirth, String image, String local, String email) {
     }
 
     public AccountDTO(Account account) {
@@ -54,14 +54,6 @@ public class AccountDTO {
         this.phoneNumber = account.getPhoneNumber();
         this.local = account.getLocal();
         this.isAdmin = account.isAdmin();
-        String imagePath = "src/main/resources/static/images/" + account.getImage();
-
-        try {
-            Path path = Paths.get(imagePath);
-            byte[] imageBytes = Files.readAllBytes(path);
-            this.imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.image = account.getImage();
     }
 }

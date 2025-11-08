@@ -58,7 +58,7 @@ public class FavoriteServiceImpl implements FavoriteService{
                     return new FavoriteDTO(
                             product.getProductID(),
                             product.getProductName(),
-                            product.getImageBase64(),
+                            product.getImage(),
                             product.getPrice()
                     );
                 })

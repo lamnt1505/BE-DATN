@@ -35,3 +35,7 @@ spring:
       root: info
       file:
         name: log/dev.log
+cloudinary:
+          cloud_name: dmuqwyece
+          api_key: 271778999598221
+          api_secret: pjdTPJJMsBrKB7ui1Sdn5wgLV9o

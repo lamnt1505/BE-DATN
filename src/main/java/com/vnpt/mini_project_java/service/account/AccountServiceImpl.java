@@ -5,6 +5,7 @@ import com.vnpt.mini_project_java.dto.LoginDTO;
 import com.vnpt.mini_project_java.entity.Account;
 import com.vnpt.mini_project_java.response.LoginMesage;
 import com.vnpt.mini_project_java.respository.AccountRepository;
+import com.vnpt.mini_project_java.service.Cloudinary.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,9 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private CloudinaryService cloudinaryService;
 
 	private static final String DATE_FORMAT = "yyyy-MM-dd";
 
@@ -89,18 +93,14 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public String addAccount(AccountDTO accountDTO, MultipartFile image) {
-
+	public String addAccount(AccountDTO accountDTO) {
 		if (accountRepository.findByAccountName(accountDTO.getAccountName()) != null) {
 			throw new RuntimeException("Tài khoản đã tồn tại");
 		}
-
 		if (accountRepository.findByEmail(accountDTO.getEmail()) != null) {
 			throw new RuntimeException("Email đã được sử dụng");
 		}
-
 		Account account = new Account();
-
 		account.setAccountID(accountDTO.getAccountID());
 		account.setAccountName(accountDTO.getAccountName());
 		account.setAccountPass(this.passwordEncoder.encode(accountDTO.getAccountPass()));
@@ -111,33 +111,20 @@ public class AccountServiceImpl implements AccountService {
 		account.setLocal(accountDTO.getLocal());
 
 		account.setTypeAccount("USER");
-
-		if (image != null && !image.isEmpty()) {
-			String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-			Path uploadDir = Paths.get("src/main/resources/static/images");
-
-			if (!Files.exists(uploadDir)) {
-				try {
-					Files.createDirectories(uploadDir);
-				} catch (IOException ex) {
-					throw new RuntimeException("Không thể tạo thư mục upload", ex);
-				}
-			}
-			Path filePath = uploadDir.resolve(fileName);
+		if (accountDTO.getImage() != null && !accountDTO.getImage().isEmpty()) {
 			try {
-				image.transferTo(filePath);
-			} catch (IOException ex) {
-				throw new RuntimeException("Không thể lưu file hình ảnh", ex);
+				String imageUrl = cloudinaryService.uploadBase64(accountDTO.getImage());
+				account.setImage(imageUrl);
+			} catch (RuntimeException e) {
+				throw new RuntimeException("Không thể upload ảnh lên Cloudinary: " + e.getMessage());
 			}
-			String imagePath = fileName;
-			account.setImage(imagePath);
 		}
 		accountRepository.save(account);
 		return account.getAccountName();
 	}
 
 	@Override
-	public void updateAccount(long accountID,AccountDTO accountDTO, MultipartFile image) {
+	public void updateAccount(long accountID,AccountDTO accountDTO) {
 		Account account = accountRepository.findById(accountDTO.getAccountID())
 				.orElseThrow(() ->
 						new RuntimeException("Không tìm thấy tài khoản với ID: " + accountDTO.getAccountID()));
@@ -154,19 +141,9 @@ public class AccountServiceImpl implements AccountService {
 		account.setPhoneNumber(accountDTO.getPhoneNumber());
 		account.setLocal(accountDTO.getLocal());
 
-		if (image != null && !image.isEmpty()) {
-			String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-			Path uploadDir = Paths.get("src/main/resources/static/images");
-			try {
-				if (!Files.exists(uploadDir)) {
-					Files.createDirectories(uploadDir);
-				}
-				Path filePath = uploadDir.resolve(fileName);
-				image.transferTo(filePath);
-				account.setImage(fileName);
-			} catch (IOException e) {
-				throw new RuntimeException("Không thể lưu hình ảnh", e);
-			}
+		if (accountDTO.getImage() != null && accountDTO.getImage().startsWith("data:image")) {
+			String imageUrl = cloudinaryService.uploadBase64(accountDTO.getImage());
+			account.setImage(imageUrl);
 		}
 		accountRepository.save(account);
 	}

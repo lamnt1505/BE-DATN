@@ -15,16 +15,16 @@ public class FavoriteDTO {
 
     private String name;
 
-    private String imageBase64;
+    private String image;
 
     private double price;
 
     private String dateProduct;
 
-    public FavoriteDTO( Long id, String name, String imageBase64, double price) {
+    public FavoriteDTO( Long id, String name, String image, double price) {
         this.id = id;
         this.name = name;
-        this.imageBase64 = imageBase64;
+        this.image = image;
         this.price = price;
     }
 }

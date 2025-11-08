@@ -59,7 +59,9 @@ public class ProductDTO {
 
     private String tradeName;
 
-    private String imageBase64;
+    private String image;
+    // link Cloudinary
+    private String imageBase64; // base64 từ client khi upload
 
     private double price;
 
@@ -91,15 +93,9 @@ public class ProductDTO {
             this.categoryID = product.getCategory().getCategoryID();
         }
 
-        String imagePath = "src/main/resources/static/images/" + product.getImage();
-        try {
-            Path path = Paths.get(imagePath);
-            byte[] imageBytes = Files.readAllBytes(path);
-            this.imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
-        } catch (IOException e) {
-            System.err.println("Không thể đọc ảnh từ đường dẫn: " + imagePath);
-            this.imageBase64 = "";
-        }
+        this.image = product.getImage();
+
+        this.imageBase64 = null;
 
         if (product.getProductVersions() != null) {
             this.productVersions = product.getProductVersions().stream()

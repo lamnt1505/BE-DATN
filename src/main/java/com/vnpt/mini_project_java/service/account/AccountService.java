@@ -30,9 +30,9 @@ public interface AccountService {
 
     Account getAccountById(long accountID);
 
-    String addAccount(AccountDTO accountDTO, MultipartFile image);
+    String addAccount(AccountDTO accountDTO);
 
-    void updateAccount(long accountID, AccountDTO accountDTO, MultipartFile image);
+    void updateAccount(long accountID, AccountDTO accountDTO);
 
     LoginMesage loginAccount(LoginDTO loginDTO, HttpSession session);
 

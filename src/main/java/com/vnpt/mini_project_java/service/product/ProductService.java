@@ -19,20 +19,17 @@ public interface ProductService {
 
     List<CompareProductDTO> getAllCompare();
 
-
-    ProductDTO createProduct(ProductDTO dto, MultipartFile image);
+    ProductDTO createProduct(ProductDTO dto);
 
     void deleteProductById(long id);
 
-    Product updateProduct(long id, ProductDTO dto,MultipartFile image);
+    Product updateProduct(long id, ProductDTO dto);
 
     Product getProductById(long productID);
-
 
     Page<ProductDTO> getPaginatedProducts(Pageable pageable);
 
     List<ProductDTO> getProductsByCategoryId(Long categoryID);
-
 
     List<Product> findBycategoryId(Long categoryID);
 

@@ -84,10 +84,10 @@ public class ProductRestController {
         return ResponseEntity.ok().body(prodouctResponse);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> createProduct(@ModelAttribute ProductDTO dto, MultipartFile image) {
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createProduct(@RequestBody ProductDTO dto) {
         try {
-            ProductDTO createProduct = productService.createProduct(dto, image);
+            ProductDTO createProduct = productService.createProduct(dto);
             logger.info("Người dùng đã thêm một sản phẩm mới. ID sản phẩm: {}, Tên sản phẩm: {}", createProduct.getId(), createProduct.getName());
             return ResponseEntity.status(HttpStatus.CREATED).body(createProduct);
         } catch (IllegalArgumentException ex) {
@@ -105,14 +105,22 @@ public class ProductRestController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable long id, ProductDTO productDTO, MultipartFile image){
+    @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateProduct(
+            @PathVariable long id,
+            @RequestBody ProductDTO productDTO) {
         try {
-            Product product = productService.updateProduct(id,productDTO,image);
-            ProductDTO updateDTO = new ProductDTO(product);
-            return ResponseEntity.ok(updateDTO);
+            Product product = productService.updateProduct(id, productDTO);
+            ProductDTO updatedDTO = new ProductDTO(product);
+            return ResponseEntity.ok(updatedDTO);
+
         } catch (EntityNotFoundException ex) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "Không tìm thấy sản phẩm"));
+
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", ex.getMessage()));
         }
     }
 

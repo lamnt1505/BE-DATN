@@ -3,6 +3,7 @@ package com.vnpt.mini_project_java.service.product;
 import com.vnpt.mini_project_java.dto.*;
 import com.vnpt.mini_project_java.entity.*;
 import com.vnpt.mini_project_java.respository.*;
+import com.vnpt.mini_project_java.service.Cloudinary.CloudinaryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Autowired
     private final ProductRepository productRepository;
@@ -76,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
     }
     
     @Override
-    public ProductDTO createProduct(ProductDTO dto, MultipartFile image) {
+    public ProductDTO createProduct(ProductDTO dto) {
 
         if (productRepository.existsByproductNameIgnoreCase(dto.getName().trim())) {
             throw new IllegalArgumentException("Tên sản phẩm '" + dto.getName() + "' đã tồn tại!");
@@ -93,21 +97,14 @@ public class ProductServiceImpl implements ProductService {
         Trademark trademark = trademarkReopsitory.findById(tradeId).
                 orElseThrow(() -> new RuntimeException("Trade mark not found with id: " + tradeId));
 
-        String fileName = image.getOriginalFilename();
-        Path uploadDir = Paths.get("src/main/resources/static/images");
-        Path filePath = uploadDir.resolve(fileName);
-
-        try {
-            image.transferTo(filePath);
-        } catch (IOException ex) {
-            throw new RuntimeException("Failed to save image file", ex);
+        String imageUrl = null;
+        if (dto.getImage() != null && dto.getImage().startsWith("data:image")) {
+            imageUrl = cloudinaryService.uploadBase64(dto.getImage());
         }
-
-        String imagePath = fileName;
 
         Product product = new Product();
         product.setProductID(dto.getId());
-        product.setImage(imagePath);
+        product.setImage(imageUrl);
         product.setProductName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
@@ -119,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(long productID, ProductDTO dto,MultipartFile image) {
+    public Product updateProduct(long productID, ProductDTO dto) {
         Optional<Product> optionalProduct = productRepository.findById(productID);
         if (!optionalProduct.isPresent()) {
             throw new RuntimeException("Product with ID " + productID + " not found");
@@ -129,17 +126,12 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(dto.getDescription());
         product.setDateProduct(LocalDate.parse(dto.getDate_product(), dateTimeFormatter));
         product.setPrice(dto.getPrice());
-        if (image != null && !image.isEmpty()) {
-            String fileName = image.getOriginalFilename();
-            Path uploadDir = Paths.get("src/main/resources/static/images");
-            Path filePath = uploadDir.resolve(fileName);
-            try {
-                image.transferTo(filePath);
-                String imagePath = fileName;
-                product.setImage(imagePath);
-            } catch (IOException ex) {
-                throw new RuntimeException("Failed to save image file", ex);
-            }
+        if ((dto.getImageBase64() != null && dto.getImageBase64().startsWith("data:image")) ||
+                (dto.getImage() != null && dto.getImage().startsWith("data:image"))) {
+
+            String base64Image = dto.getImageBase64() != null ? dto.getImageBase64() : dto.getImage();
+            String imageUrl = cloudinaryService.uploadBase64(base64Image);
+            product.setImage(imageUrl);
         }
         if (dto.getCategoryID() != null) {
             Long categoryId = dto.getCategoryID();
@@ -305,17 +297,7 @@ public class ProductServiceImpl implements ProductService {
         dto.setName(product.getProductName());
         dto.setPrice(product.getPrice());
         dto.setDescription(product.getDescription());
-        if (product.getImage() != null && !product.getImage().isEmpty()) {
-            try {
-                Path imagePath = Paths.get("src/main/resources/static/images/", product.getImage());
-                byte[] imageBytes = Files.readAllBytes(imagePath);
-                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-                dto.setImage(base64Image);
-            } catch (IOException e) {
-                e.printStackTrace();
-                dto.setImage(null);
-            }
-        }
+        dto.setImage(product.getImage());
         dto.setDateProduct(product.getDateProduct());
         dto.setCategory(product.getCategory() != null ? product.getCategory().getCategoryName() : null);
         dto.setTrademark(product.getTrademark() != null ? product.getTrademark().getTradeName() : null);

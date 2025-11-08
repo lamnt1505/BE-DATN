@@ -1,5 +1,6 @@
 package com.vnpt.mini_project_java.restcontroller;
 
+import com.cloudinary.Cloudinary;
 import com.vnpt.mini_project_java.config.VnpayConfig;
 import com.vnpt.mini_project_java.dto.*;
 import com.vnpt.mini_project_java.entity.*;
@@ -78,6 +79,9 @@ public class HomeRestController {
     @Autowired
     DiscountUsageRepository discountUsageRepository;
 
+    @Autowired
+    private Cloudinary cloudinary;
+
     private void logToConsoleAndFile(String message) {
         Logger logger = LoggerFactory.getLogger(this.getClass());
         logger.info(message);
@@ -98,7 +102,7 @@ public class HomeRestController {
             productDTO.setId(product.getProductID());
             productDTO.setName(product.getProductName());
             productDTO.setDescription(product.getDescription());
-            productDTO.setImageBase64(product.getImageBase64());
+            productDTO.setImage(product.getImage());
             productDTO.setPrice(product.getPrice());
             productDTO.setCategoryID(product.getCategory().getCategoryID());
             productDTOList.add(productDTO);
@@ -130,7 +134,7 @@ public class HomeRestController {
             ProductDTO productDTO = new ProductDTO();
             productDTO.setId(product.getProductID());
             productDTO.setName(product.getProductName());
-            productDTO.setImageBase64(product.getImageBase64());
+            productDTO.setImage(product.getImage());
             productDTO.setPrice(product.getPrice());
 
             productDTOList.add(productDTO);
@@ -145,7 +149,7 @@ public class HomeRestController {
             ProductDTO productDTO = new ProductDTO();
             productDTO.setId(product.getProductID());
             productDTO.setName(product.getProductName());
-            productDTO.setImageBase64(product.getImageBase64());
+            productDTO.setImage(product.getImage());
             productDTO.setPrice(product.getPrice());
             productDTOList.add(productDTO);
         }
@@ -793,7 +797,8 @@ public class HomeRestController {
                         o.getAccount().getPhoneNumber(),
                         o.getOrderTotal(),
                         o.getStatus(),
-                        o.getPaymentMethod()
+                        o.getPaymentMethod(),
+                        o.getTxnRef()
                 ))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(summaries);
@@ -922,6 +927,12 @@ public class HomeRestController {
     @GetMapping("/payment-method")
     public List<PaymentStatisticDTO> getPaymentStatistics() {
         return orderService.getPaymentStatistics();
+    }
+
+
+    @GetMapping("/test-cloudinary")
+    public ResponseEntity<?> testCloudinary() {
+        return ResponseEntity.ok(cloudinary.config);
     }
 }
 

@@ -65,7 +65,6 @@ public class Product {
     @JoinColumn(name = "trade_id")
     private Trademark trademark;
 
-
     @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

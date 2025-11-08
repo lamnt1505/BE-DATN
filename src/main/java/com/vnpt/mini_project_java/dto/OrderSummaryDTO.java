@@ -13,9 +13,10 @@ public class OrderSummaryDTO {
     private Double totalAmount;
     private String status;
     private String paymentMethod;
+    private String txnRef;
 
     public OrderSummaryDTO(Long orderId, LocalDate orderDate, String customerName,
-                           String phoneNumber, Double totalAmount, String status, String paymentMethod) {
+                           String phoneNumber, Double totalAmount, String status, String paymentMethod, String txnRef) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.customerName = customerName;
@@ -23,5 +24,6 @@ public class OrderSummaryDTO {
         this.totalAmount = totalAmount;
         this.status = status;
         this.paymentMethod = paymentMethod;
+        this.txnRef = txnRef;
     }
 }

@@ -111,17 +111,21 @@ public class Account {
     }
 
     public String getImageBase64() {
-        if (this.getImage() == null) {
+        if (this.image == null || this.image.isEmpty()) {
             return "";
-        } else {
-            Path imagePath = Paths.get(getImagesDir(), this.getImage());
-            try {
-                byte[] imageBytes = Files.readAllBytes(imagePath);
-                return Base64.getEncoder().encodeToString(imageBytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "";
-            }
+        }
+
+        if (this.image.startsWith("http")) {
+            return this.image; // Trả về trực tiếp link Cloudinary
+        }
+
+        Path imagePath = Paths.get(getImagesDir(), this.image);
+        try {
+            byte[] imageBytes = Files.readAllBytes(imagePath);
+            return Base64.getEncoder().encodeToString(imageBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
