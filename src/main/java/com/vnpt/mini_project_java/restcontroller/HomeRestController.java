@@ -123,6 +123,19 @@ public class HomeRestController {
         List<ProductDTO> productDTOList = convertToDTOList(productList);
         return ResponseEntity.ok(productDTOList);
     }
+    //2 cái này sử dụng cho list--Product--PriceAsc và list--Product--PriceDesc nhé a/c
+    private List<ProductDTO> convertToDTOList(List<Product> productList) {
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (Product product : productList) {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setId(product.getProductID());
+            productDTO.setName(product.getProductName());
+            productDTO.setImage(product.getImage());
+            productDTO.setPrice(product.getPrice());
+            productDTOList.add(productDTO);
+        }
+        return productDTOList;
+    }
 
     @GetMapping(value ="/dossier-statistic/list--Product--NewBest")
     public ResponseEntity<List<ProductDTO>> showListProductNewBest() {
@@ -141,19 +154,6 @@ public class HomeRestController {
         }
 
         return ResponseEntity.ok(productDTOList);
-    }
-
-    private List<ProductDTO> convertToDTOList(List<Product> productList) {
-        List<ProductDTO> productDTOList = new ArrayList<>();
-        for (Product product : productList) {
-            ProductDTO productDTO = new ProductDTO();
-            productDTO.setId(product.getProductID());
-            productDTO.setName(product.getProductName());
-            productDTO.setImage(product.getImage());
-            productDTO.setPrice(product.getPrice());
-            productDTOList.add(productDTO);
-        }
-        return productDTOList;
     }
 
     @PostMapping(value ="/dossier-statistic/insert-product")
@@ -927,12 +927,6 @@ public class HomeRestController {
     @GetMapping("/payment-method")
     public List<PaymentStatisticDTO> getPaymentStatistics() {
         return orderService.getPaymentStatistics();
-    }
-
-
-    @GetMapping("/test-cloudinary")
-    public ResponseEntity<?> testCloudinary() {
-        return ResponseEntity.ok(cloudinary.config);
     }
 }
 
