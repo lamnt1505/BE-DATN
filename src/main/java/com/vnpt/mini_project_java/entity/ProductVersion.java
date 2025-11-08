@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "product_version")
+@Table(name = "product_version", schema = "public")
 @Getter
 @Setter
 public class ProductVersion {

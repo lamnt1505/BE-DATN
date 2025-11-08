@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Discount")
+@Table(name = "Discount", schema = "public")
 @Getter
 @Setter
 public class Discount {

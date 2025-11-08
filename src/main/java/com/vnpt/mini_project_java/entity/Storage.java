@@ -31,7 +31,7 @@ import lombok.Setter;
 
 @Entity
 @DynamicUpdate
-@Table(name = "storage")
+@Table(name = "storage", schema = "public")
 @Getter
 @Setter
 public class Storage {

@@ -8,7 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "order_detail")
+@Table(name = "order_detail", schema = "public")
 @Getter
 @Setter
 public class OrderDetail {

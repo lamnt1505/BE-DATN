@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "favorite")
+@Table(name = "favorite", schema = "public")
 @Getter
 @Setter
 public class Favorite {

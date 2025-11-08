@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Branch")
+@Table(name = "Branch", schema = "public")
 @Getter
 @Setter
 public class Branch {

@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category", schema = "public")
 @Getter
 @Setter
 public class Category {

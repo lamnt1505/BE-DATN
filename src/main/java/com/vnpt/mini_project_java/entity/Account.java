@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Account")
+@Table(name = "Account", schema = "public")
 @Getter
 @Setter
 @AllArgsConstructor

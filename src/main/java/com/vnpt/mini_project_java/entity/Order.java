@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "order_info")
+@Table(name = "order_info", schema = "public")
 @Getter
 @Setter
 @ToString(exclude = {"account", "orderDetails"})

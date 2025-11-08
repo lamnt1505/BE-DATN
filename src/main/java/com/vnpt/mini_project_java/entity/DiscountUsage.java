@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "discount_usage")
+@Table(name = "discount_usage", schema = "public")
 @Getter
 @Setter
 public class DiscountUsage {

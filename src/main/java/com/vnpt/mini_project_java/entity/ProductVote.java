@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "product_vote")
+@Table(name = "product_vote", schema = "public")
 @Getter
 @Setter
 public class ProductVote {

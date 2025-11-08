@@ -16,9 +16,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "product")
+@Table(name = "product", schema = "public")
 @Getter
 @Setter
+@org.hibernate.annotations.Table(appliesTo = "product", comment = "Danh mục sản phẩm chính")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,18 +66,21 @@ public class Product {
     @JoinColumn(name = "trade_id")
     private Trademark trademark;
 
-    @JsonManagedReference
-    @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<ProductVote> productVotes = new HashSet<>();
 
-    @JsonManagedReference
-    @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Discount> discounts = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorite> favorites = new HashSet<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Storage> storages = new HashSet<>();
 
     private String getImagesDir() {
         return System.getProperty("user.dir") + "/src/main/resources/static/images";
