@@ -28,12 +28,24 @@ spring:
         format_sql: true
         show_sql: true
     show-sql: true
-  server:
-    servlet:
-      session:
-        cookie:
-          secure: true
-      context-path: /
+  # ===================== REDIS SESSION STORE =====================
+  session:
+    store-type: redis
+
+  redis:
+    host: redis-12018.c326.us-east-1-3.ec2.redns.redis-cloud.com
+    port: 12018
+    password: F6ok50nxNzzSiM9Fhl3hjHfBDXPp1gGP
+    ssl: true
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
+        same-site: none
+  port: 8080
+
   logging:
     level:
       root: info
