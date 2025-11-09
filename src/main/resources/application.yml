@@ -14,20 +14,16 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
   datasource:
-    url: jdbc:mysql://ballast.proxy.rlwy.net:22537/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/mini-project-java?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
     username: root
-    password: OoJiJzxegPZmWPCRpbSJPURlKzrvVUpw
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
+    password: 123456aA
   jpa:
-    hibernate:
-      ddl-auto: update   # có thể đổi sang create để tạo mới DB khi lần đầu deploy
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-        format_sql: true
         show_sql: true
-    show-sql: true
+        format_sql: true
+        hbm2ddl:
+          auto: update
   server:
     servlet:
       session:

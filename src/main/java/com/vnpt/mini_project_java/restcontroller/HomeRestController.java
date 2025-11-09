@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin(origins = "https://fe-qlbh-site.onrender.com", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class HomeRestController {
 
     @Autowired
@@ -123,7 +123,6 @@ public class HomeRestController {
         List<ProductDTO> productDTOList = convertToDTOList(productList);
         return ResponseEntity.ok(productDTOList);
     }
-    //2 cái này sử dụng cho list--Product--PriceAsc và list--Product--PriceDesc nhé a/c
     private List<ProductDTO> convertToDTOList(List<Product> productList) {
         List<ProductDTO> productDTOList = new ArrayList<>();
         for (Product product : productList) {
