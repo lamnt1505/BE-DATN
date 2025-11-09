@@ -159,7 +159,7 @@ public class AccountRestController {
         Cookie cookie = new Cookie("accountName", loginDTO.getAccountName());
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(24 * 60 * 60); // 1 ngày
+        cookie.setMaxAge(24 * 60 * 60);
         response.addCookie(cookie);
 
         if (loginResponse.isAdmin()) {

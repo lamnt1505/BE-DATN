@@ -14,7 +14,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",
+                "https://fe-qlbh-site.onrender.com",
                 "http://localhost:3005"
         ));
         config.addAllowedHeader("*");

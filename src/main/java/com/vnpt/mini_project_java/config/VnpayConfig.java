@@ -8,7 +8,7 @@ public class VnpayConfig {
     public static String vnp_TmnCode = "PF3ADOO7";
     public static String vnp_HashSecret = "LP454C0MQE192C4RXE77H1XPK6TJYTDQ";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:3000/payment-result";
+    public static String vnp_ReturnUrl = "https://fe-qlbh-site.onrender.com/payment-result";
     public static String vnp_IpnUrl = "http://localhost:8080/vnpay-ipn";
 
     public static String hmacSHA512(String key, String data) {
