@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://fe-qlbh-site.onrender.com", allowCredentials = "true")
 public class HomeRestController {
 
     @Autowired
