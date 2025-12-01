@@ -78,9 +78,9 @@ public class integrationVnpayRestController {
             try {
                 Long accountID = Long.parseLong(accountIdHeader);
                 account = this.accountService.findById(accountID).orElse(null);
-                logger.info("✅ Found account from header: {}", accountID);
+                logger.info("Found account from header: {}", accountID);
             } catch (Exception e) {
-                logger.error("❌ Error parsing accountID from header: {}", e.getMessage());
+                logger.error("Error parsing accountID from header: {}", e.getMessage());
             }
         }
 
@@ -249,7 +249,7 @@ public class integrationVnpayRestController {
                 order.setStatus("THANH TOÁN THẤT BẠI");
                 orderService.save(order);
 
-                System.out.println("✅Cập nhật Order " + order.getOrderID() + " thành THANH TOÁN THẤT BẠI");
+                System.out.println("Cập nhật Order " + order.getOrderID() + " thành THANH TOÁN THẤT BẠI");
             }
 
             Map<String, Object> res = new HashMap<>();
