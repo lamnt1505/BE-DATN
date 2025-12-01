@@ -49,11 +49,8 @@ public class StatisticalRestController {
     @GetMapping("/product")
     public ResponseEntity<ByteArrayResource> exportStatistics() {
         List<StatisticalProductProjections> statistics = statisticsService.statisticalForProduct();
-
         byte[] excelData = ExcelUtil.createStatisticalProductExcel(statistics);
-
         ByteArrayResource resource = new ByteArrayResource(excelData);
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=statistical_product.xlsx")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -255,5 +252,11 @@ public class StatisticalRestController {
             result.add(map);
         }
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/total-revenue")
+    public ResponseEntity<?> getTotalRevenue() {
+        double total = statisticsService.getTotalRevenue();
+        return ResponseEntity.ok(total);
     }
 }

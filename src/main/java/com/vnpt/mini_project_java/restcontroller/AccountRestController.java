@@ -6,13 +6,13 @@ import com.vnpt.mini_project_java.entity.Account;
 import com.vnpt.mini_project_java.response.LoginMesage;
 import com.vnpt.mini_project_java.service.account.AccountService;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -33,12 +33,13 @@ import javax.servlet.http.HttpSession;
 public class AccountRestController {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AccountRestController.class);
+    private static final Long MAIN_ADMIN_ID = 1L;
 
     @Autowired
     private AccountService accountService;
 
     private String generateRandomText(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        String characters = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
         StringBuilder captchaText = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; i++) {
@@ -121,20 +122,31 @@ public class AccountRestController {
             @RequestParam("role") String requestRole) {
 
         String headerRole = request.getHeader("X-Role");
+
+        String adminName = request.getHeader("X-Admin-Name");
+
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+
         if (!"ADMIN".equals(headerRole)) {
+            logger.warn("Truy cập bị từ chối: '{}' không phải ADMIN", adminName);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Không có quyền");
         }
 
         Optional<Account> optionalAccount = accountService.findById(accountID);
 
         if (!optionalAccount.isPresent()) {
+            logger.warn("Tài khoản không tìm thấy: accountID='{}'", accountID);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy người dùng");
         }
 
         Account user = optionalAccount.get();
+        String oldRole = user.getTypeAccount();
         user.setTypeAccount(requestRole.toUpperCase());
 
         accountService.save(user);
+
+        logger.info("✅ Phân quyền thành công: Admin='{}' đã thay đổi role của '{}' từ '{}' thành '{}'",
+                adminName, user.getAccountName(), oldRole, requestRole.toUpperCase());
 
         return ResponseEntity.ok("Phân quyền thành công! Người dùng giờ là: " + requestRole.toUpperCase());
     }
@@ -207,7 +219,6 @@ public class AccountRestController {
         if (accountName == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         return accountService.findByname(accountName)
                 .map(acc -> new AccountDTO(
                         acc.getAccountID(),
@@ -240,6 +251,70 @@ public class AccountRestController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra khi đổi mật khẩu");
+        }
+    }
+
+    @DeleteMapping("/{accountID}/delete")
+    public ResponseEntity<?> deleteAccount( @PathVariable Long accountID, HttpServletRequest request) {
+        String adminName = request.getHeader("X-Admin-Name");
+        try {
+            if (accountID.equals(MAIN_ADMIN_ID)) {
+                logger.error("NGĂN CHẶN: Admin='{}' cố gắng xóa admin chính (ID={})",
+                        adminName, accountID);
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "❌ Không thể xóa admin chính!");
+                response.put("code", "CANNOT_DELETE_MAIN_ADMIN");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            }
+            long adminCount = accountService.countByTypeAccount("ADMIN");
+            Optional<Account> optionalAccount = accountService.findById(accountID);
+            if (!optionalAccount.isPresent()) {
+                logger.warn("Xóa tài khoản thất bại: Tài khoản ID='{}' không tồn tại", accountID);
+                Map<String, Object> response = new HashMap<String, Object>() {{
+                    put("success", false);
+                    put("message", "Tài khoản không tồn tại");
+                }};
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            Account account = optionalAccount.get();
+            if ("ADMIN".equals(account.getTypeAccount()) && adminCount <= 1) {
+                logger.error("❌ NGĂN CHẶN: Admin='{}' cố gắng xóa admin duy nhất (ID='{}')",
+                        adminName, accountID);
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "❌ Không thể xóa admin duy nhất trong hệ thống!");
+                response.put("code", "CANNOT_DELETE_ONLY_ADMIN");
+
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            }
+            accountService.deleteById(accountID);
+            logger.info("✅ Xóa tài khoản thành công: Admin='{}' đã xóa tài khoản ID='{}' ({})",
+                    adminName, accountID, account.getAccountName());
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "✅ Xóa tài khoản thành công");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("❌ Lỗi khi xóa tài khoản ID='{}': {}", accountID, e.getMessage(), e);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Lỗi: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/admin/count")
+    public ResponseEntity<?> getAdminCount() {
+        try {
+            long adminCount = accountService.countByTypeAccount("ADMIN");
+            Map<String, Object> response = new HashMap<>();
+            response.put("adminCount", adminCount);
+            response.put("canDeleteAdmin", adminCount > 1);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            return ResponseEntity.internalServerError().body(errorResponse);
         }
     }
 }

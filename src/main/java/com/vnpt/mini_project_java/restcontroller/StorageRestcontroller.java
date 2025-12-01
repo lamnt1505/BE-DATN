@@ -85,4 +85,11 @@ public class StorageRestcontroller {
 		StorageDTO storageResponse = new StorageDTO(storage);
 		return ResponseEntity.ok().body(storageResponse);
 	}
+
+	@GetMapping("/low-stock")
+	public ResponseEntity<?> getLowStockProducts(
+			@RequestParam(defaultValue = "5") int threshold) {
+		List<StorageDTO> list = storageService.getLowStockProducts(threshold);
+		return ResponseEntity.ok(list);
+	}
 }

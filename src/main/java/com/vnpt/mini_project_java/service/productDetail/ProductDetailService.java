@@ -13,5 +13,9 @@ public interface ProductDetailService {
 
     ProductDetailDTO createProductDetail(ProductDetailDTO dto);
 
+    ProductDetailDTO updateProductDetail(Long id, ProductDetailDTO dto);
+
+    void deleteProductDetail(Long id);
+
     List<ProductDetail> findByIdProduct(long productID);
 }

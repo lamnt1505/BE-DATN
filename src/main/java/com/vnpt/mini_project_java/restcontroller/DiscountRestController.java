@@ -19,7 +19,6 @@ import java.util.*;
 @CrossOrigin(origins = "http://localhost:3000,http://localhost:3005", allowCredentials = "true")
 @Component
 public class DiscountRestController {
-
     @Autowired
     private DiscountService discountService;
 
@@ -158,6 +157,7 @@ public class DiscountRestController {
             response.put("discountPercent", latest.getDiscountPercent());
             response.put("dateStart", latest.getDateStart());
             response.put("dateFinish", latest.getDateFinish());
+            response.put("active", latest.getActive());
         } else {
             response.put("success", false);
             response.put("message", "Không có mã giảm giá nào hiện tại.");

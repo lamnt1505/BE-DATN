@@ -5,6 +5,8 @@ import com.vnpt.mini_project_java.entity.Trademark;
 import com.vnpt.mini_project_java.respository.TrademarkReopsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,5 +66,29 @@ public class TrademarkServiceImpl implements TrademarkService{
         Trademark trademark = trademarkReopsitory.findById(id).orElseThrow(
                 () -> new RuntimeException("Trademark not found with id:" + id));
         trademarkReopsitory.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void importTrademarkExcel(List<TrademarkDTO> dtos) {
+
+        for (TrademarkDTO dto : dtos) {
+            Optional<Trademark> existedByName = trademarkReopsitory.findByTradeName(dto.getTradeName());
+            if (existedByName.isPresent() &&
+                    !existedByName.get().getTradeID().equals(dto.getTradeID())) {
+                throw new RuntimeException(
+                        "Tên thương hiệu '" + dto.getTradeName() + "' đã tồn tại!"
+                );
+            }
+
+            Trademark trademark = trademarkReopsitory
+                    .findById(dto.getTradeID())
+                    .orElse(new Trademark());
+
+            trademark.setTradeID(dto.getTradeID());
+            trademark.setTradeName(dto.getTradeName());
+
+            trademarkReopsitory.save(trademark);
+        }
     }
 }

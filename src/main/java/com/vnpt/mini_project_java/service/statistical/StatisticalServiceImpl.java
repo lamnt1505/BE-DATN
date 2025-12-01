@@ -43,4 +43,10 @@ public class StatisticalServiceImpl implements StatisticalService {
     public List<Map<String, Object>> getProfitByDate(LocalDate startDate, LocalDate endDate) {
         return orderRepository.getProfitStatisticsByDate(startDate, endDate);
     }
+
+    @Override
+    public double getTotalRevenue() {
+        Double result = orderRepository.getTotalRevenue();
+        return result != null ? result : 0.0;
+    }
 }

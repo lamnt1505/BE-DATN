@@ -4,6 +4,7 @@ import com.vnpt.mini_project_java.dto.TrademarkDTO;
 import com.vnpt.mini_project_java.entity.Trademark;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -17,4 +18,7 @@ public interface TrademarkService {
     Trademark updateTramemark(long tradeID, TrademarkDTO dto);
 
     void deleteTrademarkById(long id);
+
+    @Transactional
+    void importTrademarkExcel(List<TrademarkDTO> dtos);
 }

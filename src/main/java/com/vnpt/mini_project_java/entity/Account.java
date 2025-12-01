@@ -116,7 +116,7 @@ public class Account {
         }
 
         if (this.image.startsWith("http")) {
-            return this.image; // Trả về trực tiếp link Cloudinary
+            return this.image;
         }
 
         Path imagePath = Paths.get(getImagesDir(), this.image);

@@ -19,4 +19,6 @@ public interface StatisticalService {
     List<StatisticalForQuarterProjections> statisticalForQuarter();
 
     List<Map<String, Object>> getProfitByDate(LocalDate startDate, LocalDate endDate);
+
+    double getTotalRevenue();
 }

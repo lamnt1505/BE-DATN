@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -37,13 +38,56 @@ public class ProductDetailRestController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductDetailDTO> createProductDetail(ProductDetailDTO dto){
-        try{
-            ProductDetailDTO createProductDetail = productDetailService.createProductDetail(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createProductDetail);
-        }catch (EntityNotFoundException ex){
-            System.out.println("Error" + ex.getMessage());
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> createProductDetail(@RequestBody ProductDetailDTO dto){
+        try {
+            System.out.println("Request body: " + dto);
+            ProductDetailDTO createdProductDetail = productDetailService.createProductDetail(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDetail);
+        } catch (RuntimeException ex) {
+            System.err.println("Error: " + ex.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(Collections.singletonMap("error", ex.getMessage()));
+        } catch (Exception ex) {
+            System.err.println("Unexpected error: " + ex.getMessage());
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Lỗi hệ thống: " + ex.getMessage()));
+        }
+    }
+
+    @PutMapping(value = "/{id}/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateProductDetail(
+            @PathVariable(name = "id") Long productDetailID,
+            @RequestBody ProductDetailDTO dto) {
+        try {
+            System.out.println("Update request for ID: " + productDetailID);
+            ProductDetailDTO updatedProductDetail = productDetailService.updateProductDetail(productDetailID, dto);
+            return ResponseEntity.ok(updatedProductDetail);
+        } catch (RuntimeException ex) {
+            System.err.println("Error: " + ex.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(Collections.singletonMap("error", ex.getMessage()));
+        } catch (Exception ex) {
+            System.err.println("Unexpected error: " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Lỗi hệ thống: " + ex.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProductDetail(@PathVariable(name = "id") Long productDetailID) {
+        try {
+            System.out.println("Delete request for ID: " + productDetailID);
+            productDetailService.deleteProductDetail(productDetailID);
+            return ResponseEntity.ok(Collections.singletonMap("message", "Xóa chi tiết sản phẩm thành công"));
+        } catch (RuntimeException ex) {
+            System.err.println("Error: " + ex.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(Collections.singletonMap("error", ex.getMessage()));
+        } catch (Exception ex) {
+            System.err.println("Unexpected error: " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Lỗi hệ thống: " + ex.getMessage()));
         }
     }
 }

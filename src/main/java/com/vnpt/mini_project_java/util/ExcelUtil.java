@@ -2,6 +2,7 @@ package com.vnpt.mini_project_java.util;
 
 import com.vnpt.mini_project_java.dto.CategoryDTO;
 import com.vnpt.mini_project_java.dto.ProductDTO;
+import com.vnpt.mini_project_java.dto.TrademarkDTO;
 import com.vnpt.mini_project_java.projections.StatisticalForMonthProjections;
 import com.vnpt.mini_project_java.projections.StatisticalForYearProjections;
 import com.vnpt.mini_project_java.projections.StatisticalProductProjections;
@@ -26,6 +27,8 @@ public class ExcelUtil {
         List<ProductDTO> products = new ArrayList<>();
 
         for (Row row : sheet) {
+            if (row.getRowNum() == 0) continue;
+
             Cell nameCell = row.getCell(0);
             Cell descriptionCell = row.getCell(1);
             Cell dateCell = row.getCell(2);
@@ -43,7 +46,8 @@ public class ExcelUtil {
                 String description = descriptionCell.getStringCellValue();
                 LocalDate dateProduct = null;
                 if (dateCell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(dateCell)) {
-                    dateProduct = dateCell.getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    dateProduct = dateCell.getDateCellValue().toInstant().
+                            atZone(ZoneId.systemDefault()).toLocalDate();
                 } else if (dateCell.getCellType() == CellType.STRING) {
                     String dateStr = dateCell.getStringCellValue();
                     try {
@@ -58,7 +62,12 @@ public class ExcelUtil {
                 String categoryName = categoryNameCell.getStringCellValue();
                 Long tradeId = (long) tradeIdCell.getNumericCellValue();
                 String tradeName = tradeNameCell.getStringCellValue();
-                String imageUrl = row.getCell(8).getRichStringCellValue().getString();
+                String imageUrl = "";
+                if (imageCell.getCellType() == CellType.STRING) {
+                    imageUrl = imageCell.getStringCellValue();
+                } else if (imageCell.getCellType() == CellType.BLANK) {
+                    imageUrl = "";
+                }
 
                 ProductDTO productDTO = new ProductDTO();
                 productDTO.setName(name);
@@ -69,7 +78,7 @@ public class ExcelUtil {
                 productDTO.setCategoryname(categoryName);
                 productDTO.setTradeID(tradeId);
                 productDTO.setTradeName(tradeName);
-                productDTO.setImageBase64(imageUrl);
+                productDTO.setImage(imageUrl);
 
                 products.add(productDTO);
             }
@@ -94,6 +103,32 @@ public class ExcelUtil {
         }
         workbook.close();
         return categorys;
+    }
+
+    public static List<TrademarkDTO> readTrademarkExcel(MultipartFile file) throws IOException {
+        Workbook workbook = new XSSFWorkbook(file.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);
+
+        List<TrademarkDTO> list = new ArrayList<>();
+
+        for (Row row : sheet) {
+
+            if (row.getRowNum() == 0) continue;
+
+            Cell idCell = row.getCell(0);
+            Cell nameCell = row.getCell(1);
+
+            if (idCell == null || nameCell == null) continue;
+
+            TrademarkDTO dto = new TrademarkDTO();
+            dto.setTradeID((long) idCell.getNumericCellValue());
+            dto.setTradeName(nameCell.getStringCellValue());
+
+            list.add(dto);
+        }
+
+        workbook.close();
+        return list;
     }
 
     public static byte[] createStatisticalProductExcel(List<StatisticalProductProjections> statistics) {

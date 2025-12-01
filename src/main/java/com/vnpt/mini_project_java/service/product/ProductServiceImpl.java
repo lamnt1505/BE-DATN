@@ -210,14 +210,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void importProductsFromExcel(List<ProductDTO> productDTOs) {
         List<Product> products = new ArrayList<>();
+
         for (ProductDTO productDTO : productDTOs) {
             Product product = new Product();
             product.setProductName(productDTO.getName());
             product.setDescription(productDTO.getDescription());
             product.setDateProduct(LocalDate.parse(productDTO.getDate_product()));
             product.setPrice(productDTO.getPrice());
-            product.setCategory(product.getCategory());
-            product.setImageBase64(productDTO.getImageBase64());
+
             Category category = new Category();
             category.setCategoryID(productDTO.getCategoryID());
             category.setCategoryName(productDTO.getCategoryname());
@@ -227,6 +227,8 @@ public class ProductServiceImpl implements ProductService {
             trademark.setTradeID(productDTO.getTradeID());
             trademark.setTradeName(productDTO.getTradeName());
             product.setTrademark(trademark);
+
+            product.setImage(productDTO.getImage());
 
             products.add(product);
         }

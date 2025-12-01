@@ -13,4 +13,6 @@ public interface ProductVotesService {
     List<ProductVoteDTO> getAllvoteDTO();
 
     Page<ProductVoteDTO> getPaginatedProducts(Pageable pageable);
+
+    List<ProductVoteDTO> getVotesByProductId(Long productId);
 }

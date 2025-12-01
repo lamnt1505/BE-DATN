@@ -2,6 +2,7 @@ package com.vnpt.mini_project_java.service.storage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -110,5 +111,25 @@ public class StorageServiceImpl implements StorageService {
 		Storage storage = storageRepository.findById(idImport)
 				.orElseThrow(() -> new RuntimeException("Storage not found with id: " + idImport));
 		storageRepository.deleteById(idImport);
+	}
+
+	@Override
+	public List<StorageDTO> getLowStockProducts(int threshold) {
+
+		List<Object[]> results = storageRepository.getLowStockProducts(threshold);
+
+		List<StorageDTO> dtoList = new ArrayList<>();
+
+		for (Object[] row : results) {
+			StorageDTO dto = new StorageDTO();
+
+			dto.setProductId(((Number) row[0]).longValue());
+			dto.setProduct_name((String) row[1]);
+			dto.setQuantity(((Number) row[2]).intValue());
+
+			dtoList.add(dto);
+		}
+
+		return dtoList;
 	}
 }

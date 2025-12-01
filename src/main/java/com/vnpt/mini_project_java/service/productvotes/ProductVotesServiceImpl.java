@@ -70,4 +70,13 @@ public class ProductVotesServiceImpl implements ProductVotesService{
 
         return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }
+
+    @Override
+    public List<ProductVoteDTO> getVotesByProductId(Long productId) {
+        List<ProductVote> votes = productVoteRepository.findByProductId(productId);
+
+        return votes.stream()
+                .map(ProductVoteDTO::new)  // dùng constructor DTO(ProductVote)
+                .collect(Collectors.toList());
+    }
 }

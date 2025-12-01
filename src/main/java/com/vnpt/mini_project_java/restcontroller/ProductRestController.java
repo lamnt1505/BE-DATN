@@ -167,18 +167,29 @@ public class ProductRestController {
 
     @PostMapping("/import")
     public ResponseEntity<Map<String, String>> importProducts(@RequestParam("file") MultipartFile file) {
+        Map<String, String> response = new HashMap<>();
         try {
             List<ProductDTO> products = ExcelUtil.readProductsFromExcel(file);
+
+            if (products.isEmpty()) {
+                response.put("message", "File không có dữ liệu hợp lệ!");
+                return ResponseEntity.badRequest().body(response);
+            }
             productService.importProductsFromExcel(products);
-            Map<String, String> response = new HashMap<>();
+
             response.put("message", "Thêm mới thành công");
             return ResponseEntity.ok(response);
+
         } catch (IOException e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Có lỗi khi thêm file");
-            return ResponseEntity.badRequest().body(errorResponse);
+            response.put("message", "Không thể đọc file Excel: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+
+        } catch (Exception e) {
+            response.put("message", "Có lỗi khi import dữ liệu: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
+
     
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadExcelProductTemplate(){

@@ -1,4 +1,14 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: lamnguyen4791@gmail.com
+    password: uars xhge ecix upmq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
   springfox:
     documentation:
       auto-startup: false
@@ -14,7 +24,7 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
   datasource:
-    url: jdbc:mysql://localhost:3306/mini-project-java?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/datn?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: 123456aA
   jpa:
@@ -35,7 +45,8 @@ spring:
       root: info
       file:
         name: log/dev.log
+
 cloudinary:
-          cloud_name: dmuqwyece
-          api_key: 271778999598221
-          api_secret: pjdTPJJMsBrKB7ui1Sdn5wgLV9o
+  cloud_name: dmuqwyece
+  api_key: 271778999598221
+  api_secret: pjdTPJJMsBrKB7ui1Sdn5wgLV9o

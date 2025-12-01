@@ -125,4 +125,7 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     List<Order> findTop5ByOrderByOrderDateImportDesc();
 
     Optional<Order> findByTxnRef(String txnRef);
+
+    @Query("SELECT SUM(o.orderTotal) FROM Order o WHERE o.status = 'Hoàn thành'")
+    Double getTotalRevenue();
 }

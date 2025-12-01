@@ -26,6 +26,12 @@ public class ProductVotesRestController {
         return ResponseEntity.ok(categoryDTOS);
     }
 
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<ProductVoteDTO>> getVotesByProductId(@PathVariable Long productId) {
+        List<ProductVoteDTO> votes = productVotesService.getVotesByProductId(productId);
+        return ResponseEntity.ok(votes);
+    }
+
     @GetMapping("/paginated")
     public Page<ProductVoteDTO> getProducts(
             @RequestParam(defaultValue = "0") int page,

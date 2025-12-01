@@ -20,7 +20,7 @@ public class ProductSpecifications {
             Predicate predicate;
 
             if (criteria.getProductID() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("product").get("productID"), criteria.getProductID()));
+                predicates.add(criteriaBuilder.equal(root.get("productID"), criteria.getProductID()));
             }
 
             if (criteria.getCategoryID() != null && !criteria.getCategoryID().isEmpty()) {
@@ -71,12 +71,6 @@ public class ProductSpecifications {
                 predicates.add(predicate);
             }
 
-            if (criteria.getPrice() != null && !criteria.getPrice().isEmpty()) {
-                Join<Product, ProductVersion> productVersions = root.join("productVersions");
-                predicate = criteriaBuilder.equal(productVersions.get("price"), criteria.getPrice());
-                predicates.add(predicate);
-            }
-
             if (criteria.getProductCamera() != null && !criteria.getProductCamera().isEmpty()) {
                 Join<Product, ProductDetail> productDetails = root.join("productDetails");
                 predicate = criteriaBuilder.equal(productDetails.get("productCamera"), criteria.getProductCamera());
@@ -93,6 +87,19 @@ public class ProductSpecifications {
                 Join<Product, ProductDetail> productDetails = root.join("productDetails");
                 predicate = criteriaBuilder.equal(productDetails.get("productScreen"), criteria.getProductScreen());
                 predicates.add(predicate);
+            }
+
+            if (criteria.getPrice() != null && !criteria.getPrice().isEmpty()) {
+                try {
+                    String[] parts = criteria.getPrice().split("-");
+                    if (parts.length == 2) {
+                        double minPrice = Double.parseDouble(parts[0]);
+                        double maxPrice = Double.parseDouble(parts[1]);
+                        predicates.add(criteriaBuilder.between(root.get("price"), minPrice, maxPrice));
+                    }
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
             }
 
             if (predicates.isEmpty()) {

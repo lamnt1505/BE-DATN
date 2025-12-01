@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,4 +38,9 @@ public interface AccountService {
     LoginMesage loginAccount(LoginDTO loginDTO, HttpSession session);
 
     void changePassword(Long accountID, String oldPassword, String newPassword);
+
+    long countByTypeAccount(String typeAccount);
+
+    @Transactional
+    void deleteById(Long accountID);
 }

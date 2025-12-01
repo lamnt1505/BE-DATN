@@ -10,18 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -124,14 +119,14 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public void updateAccount(long accountID,AccountDTO accountDTO) {
+	public void updateAccount(long accountID, AccountDTO accountDTO) {
 		Account account = accountRepository.findById(accountDTO.getAccountID())
 				.orElseThrow(() ->
 						new RuntimeException("Không tìm thấy tài khoản với ID: " + accountDTO.getAccountID()));
 
 		account.setAccountName(accountDTO.getAccountName());
 
-		if(accountDTO.getAccountPass() != null && !accountDTO.getAccountPass().trim().isEmpty()) {
+		if (accountDTO.getAccountPass() != null && !accountDTO.getAccountPass().trim().isEmpty()) {
 			account.setAccountPass(passwordEncoder.encode(accountDTO.getAccountPass()));
 		}
 
@@ -202,5 +197,34 @@ public class AccountServiceImpl implements AccountService {
 
 		account.setAccountPass(passwordEncoder.encode(newPassword));
 		accountRepository.save(account);
+	}
+
+	@Override
+	public long countByTypeAccount(String typeAccount) {
+		try {
+			long count = accountRepository.countByTypeAccount(typeAccount);
+			return count;
+		} catch (Exception e) {
+			throw new RuntimeException("Lỗi khi đếm account: " + e.getMessage());
+		}
+	}
+
+	@Override
+	@Transactional
+	public void deleteById(Long accountID) {
+		if (accountID == null || accountID <= 0) {
+			throw new IllegalArgumentException("Account ID không hợp lệ");
+		}
+		try {
+			Optional<Account> account = accountRepository.findById(accountID);
+			if (!account.isPresent()) {
+				throw new RuntimeException("Tài khoản không tồn tại");
+			}
+
+			Account acc = account.get();
+			accountRepository.deleteById(accountID);
+		} catch (Exception e) {
+			throw new RuntimeException("Lỗi khi xóa account: " + e.getMessage());
+		}
 	}
 }

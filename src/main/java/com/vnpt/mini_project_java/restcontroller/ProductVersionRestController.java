@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/productversion", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/product/version", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductVersionRestController {
 
     @Autowired
@@ -37,5 +37,4 @@ public class ProductVersionRestController {
         ProductVersionDTO prodouctVersionResponse = new ProductVersionDTO(productVersion);
         return ResponseEntity.ok().body(prodouctVersionResponse);
     }
-
 }

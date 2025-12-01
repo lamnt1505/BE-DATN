@@ -50,6 +50,12 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn(name = "trade_id")
+    private Trademark trademark;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
@@ -59,12 +65,6 @@ public class Product {
     @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ProductDetail> productDetails ;
-
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JoinColumn(name = "trade_id")
-    private Trademark trademark;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore

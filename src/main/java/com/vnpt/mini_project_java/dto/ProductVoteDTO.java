@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,9 +26,9 @@ public class ProductVoteDTO {
 
     private Long productID;
 
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     public ProductVoteDTO() {
     }
@@ -36,7 +37,7 @@ public class ProductVoteDTO {
         this.productVoteID = productVote.getProductVoteID();
         this.rating = productVote.getRating();
         this.comment = productVote.getComment();
-        this.accountID = (productVote.getAccount() != null) ? productVote.getAccount().getAccountID() : null;// nếu null thì hieenr thị là null
+        this.accountID = (productVote.getAccount() != null) ? productVote.getAccount().getAccountID() : null;
         this.productID = productVote.getProduct().getProductID();
         this.createdAt = productVote.getCreatedAt();
         this.updatedAt = productVote.getUpdatedAt();

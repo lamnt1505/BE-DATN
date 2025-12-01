@@ -20,4 +20,6 @@ public interface StorageService {
 	Storage getImportById(long idImport);
 
 	void deleteStorageById(long id);
+
+    List<StorageDTO> getLowStockProducts(int threshold);
 }

@@ -60,8 +60,10 @@ public class ProductDTO {
     private String tradeName;
 
     private String image;
-    // link Cloudinary
-    private String imageBase64; // base64 từ client khi upload
+
+    private String image1;
+
+    private String imageBase64;
 
     private double price;
 

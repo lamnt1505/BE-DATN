@@ -1,43 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- Đường dẫn file log -->
     <property name="LOG_FILE" value="D:/log/to/logfile.log" />
+    <property name="LOG_DIR" value="logs" />
 
-    <!-- File Appender -->
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_FILE}</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-
-    <!-- Console Appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %green(%logger{36}) - %msg%n</pattern>
             <charset>utf-8</charset>
         </encoder>
     </appender>
-    
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		        <encoder>
-		            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
-		        </encoder>
-		    </appender>
-		    
-		    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		        <file>logs/app.log</file>
-		        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-		            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
-		            <maxHistory>30</maxHistory>
-		        </rollingPolicy>
-		        <encoder>
-		            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
-		        </encoder>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_FILE}</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
     </appender>
-    <!-- Ghi log vào file và console -->
-    <root level="info">
+
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+    <root level="INFO">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ROLLING_FILE" />
     </root>
+    <logger name="com.vnpt.mini_project_java" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ROLLING_FILE" />
+    </logger>
 </configuration>

@@ -8,6 +8,7 @@ import com.vnpt.mini_project_java.respository.DiscountRepository;
 import com.vnpt.mini_project_java.respository.DiscountUsageRepository;
 import com.vnpt.mini_project_java.service.account.AccountService;
 import com.vnpt.mini_project_java.service.discount.DiscountService;
+import com.vnpt.mini_project_java.service.email.EmailService;
 import com.vnpt.mini_project_java.service.favorite.FavoriteService;
 import com.vnpt.mini_project_java.service.order.OrderService;
 import com.vnpt.mini_project_java.service.orderDetail.OrderDetailService;
@@ -50,6 +51,9 @@ import java.util.stream.Collectors;
 public class HomeRestController {
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private AccountService accountService;
 
     @Autowired
@@ -78,9 +82,6 @@ public class HomeRestController {
 
     @Autowired
     DiscountUsageRepository discountUsageRepository;
-
-    @Autowired
-    private Cloudinary cloudinary;
 
     private void logToConsoleAndFile(String message) {
         Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -158,7 +159,8 @@ public class HomeRestController {
     @PostMapping(value ="/dossier-statistic/insert-product")
     @ResponseBody
     public Product.CartUpdateStatus saveCartToSession(@RequestParam(name = "productID") long productID,
-                                                      @RequestParam int amount, HttpSession session, HttpServletRequest request) {
+                                                      @RequestParam int amount, HttpSession session,
+                                                      HttpServletRequest request) {
         Logger logger = LoggerFactory.getLogger(this.getClass());
         Product productOrder = this.productService.findByIdProduct(productID);
         if (productOrder == null) {
@@ -203,6 +205,7 @@ public class HomeRestController {
         String logMessage = "Người dùng '" + username + "' đã mua " + amount + " Đơn Vị Sản Phẩm '" + productName
                 + "' Vào Gio Hang.";
         logToConsoleAndFile(logMessage);
+        logger.info(logMessage);
         return Product.CartUpdateStatus.SUCCESS;
     }
 
@@ -241,20 +244,53 @@ public class HomeRestController {
     public String orders(HttpServletRequest request, HttpSession session, @RequestBody OrderRequestDTO orderRequest) {
         Logger logger = LoggerFactory.getLogger(this.getClass());
 
-        Account account = null;
+        logger.info("========== BẮT ĐẦU TẠO ĐƠN HÀNG MỚI ==========");
+        logger.info("Thời gian: {}", LocalDateTime.now());
+        /*        String accountName = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("accountName")) {
+                    accountName = cookie.getValue();
                     account = this.accountService.findByname(cookie.getValue()).orElse(null);
                     break;
                 }
             }
+        }*/
+        Account account = null;
+        String accountIdHeader = request.getHeader("X-Account-ID");
+        if (accountIdHeader != null && !accountIdHeader.isEmpty()) {
+            try {
+                Long accountID = Long.parseLong(accountIdHeader);
+                account = this.accountService.findById(accountID).orElse(null);
+                logger.info("Found account from header: {}", accountID);
+            } catch (Exception e) {
+                logger.error("Error parsing accountID from header: {}", e.getMessage());
+            }
         }
+
+        if (account == null) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("accountName")) {
+                        account = this.accountService.findByname(cookie.getValue()).orElse(null);
+                        break;
+                    }
+                }
+            }
+        }
+        if (account == null && session.getAttribute("accountID") != null) {
+            Long accountID = (Long) session.getAttribute("accountID");
+            account = this.accountService.findById(accountID).orElse(null);
+        }
+
         if (account == null || account.getAccountID() <= 0) {
             logger.error("Account not found or invalid.");
             return "0";
         }
+
+        logger.info("Người dùng: {} (ID: {})", account.getAccountName(), account.getAccountID());
 
         List<Product> list = (List<Product>) session.getAttribute("cart");
         if (list == null || list.isEmpty()) {
@@ -289,7 +325,19 @@ public class HomeRestController {
         order.setShippingAddress(orderRequest.getShippingAddress());
         order.setNote(orderRequest.getNote());
 
-        orderService.save(order);
+        logger.info("Thông tin đơn hàng:");
+        logger.info("-Người nhận: {}", orderRequest.getReceiverName());
+        logger.info("-Phương thức thanh toán: {}", order.getPaymentMethod());
+        try {
+            orderService.save(order);
+            logger.info("✅ Lưu đơn hàng thành công (ID: {})", order.getOrderID());
+
+            emailService.sendOrderEmail(account.getEmail(), order);
+            logger.info("📩 Đã gửi email xác nhận đơn hàng đến {}", account.getEmail());
+        } catch (Exception e) {
+            logger.error("❌ LỖI khi lưu đơn hàng: {}", e.getMessage(), e);
+            return "0";
+        }
 
         Set<OrderDetail> setDetail = new HashSet<>();
         for (Product product : list) {
@@ -301,19 +349,30 @@ public class HomeRestController {
             setDetail.add(s);
 
             orderDetailService.save(s);
+            logger.debug("✅ Thêm sản phẩm '{}' (Số lượng: {}, Giá: {})",
+                    product.getProductName(),
+                    product.getAmount(),
+                    product.getPrice());
         }
         order.setOrderDetails(setDetail);
 
+        logger.info("Tạo {} chi tiết đơn hàng");
+        logger.info("TẠO ĐƠN HÀNG THÀNH CÔNG");
         logger.info("Created Order ID {} with txnRef {}", order.getOrderID(), txnRef);
+        logger.info("   - Người tạo: {} (ID: {})", account.getAccountName(), account.getAccountID());
 
         session.setAttribute("cart", new ArrayList<>());
         session.removeAttribute("discountedTotal");
+
+        logger.info("========== KẾT THÚC TẠO ĐƠN HÀNG ==========\n");
 
         return "1";
     }
 
     @PostMapping(value ="/dossier-statistic/cancel-order")
-    public ResponseEntity<?> cancelOrder(@RequestParam(name = "orderID") Long orderID) {
+    public ResponseEntity<?> cancelOrder(@RequestParam(name = "orderID") Long orderID,
+                                         @RequestParam(name = "reason") String reason) {
+        Logger logger = LoggerFactory.getLogger(this.getClass());
         try {
             Order order = orderService.findById(orderID);
             if (order == null) {
@@ -324,11 +383,16 @@ public class HomeRestController {
             }
 
             order.setStatus("Đã Hủy");
+            order.setNote(reason);
             orderService.save(order);
+
+            emailService.sendCancelOrderEmail(order.getAccount().getEmail(), order);
+            logger.info("📧 Đã gửi email hủy đơn hàng đến {}", order.getAccount().getEmail());
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Đơn hàng đã được hủy thành công");
             response.put("orderID", orderID);
+            response.put("reason", reason);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -347,7 +411,7 @@ public class HomeRestController {
 
             return ResponseEntity.ok(productDTOs);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Đã xảy ra lỗi khi xử lý yêu cầu của bạn\n");
+            return ResponseEntity.internalServerError().body("Lỗi: " + e.getMessage());
         }
     }
 
@@ -402,12 +466,10 @@ public class HomeRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("⚠️ Bạn cần đăng nhập để thêm sản phẩm yêu thích!");
         }
-
         if (productID == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Thiếu mã sản phẩm!");
         }
-
         String result = favoriteService.addProductToFavorite(accountID, productID);
         HttpStatus status = result.contains("Đã thêm") ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(result, status);
@@ -426,7 +488,6 @@ public class HomeRestController {
     public ResponseEntity<?> removeFavorite(@PathVariable Long accountId, @PathVariable Long productId) {
         try {
             boolean removed = favoriteService.removeFavorite(accountId, productId);
-
             Map<String, Object> response = new HashMap<>();
             if (removed) {
                 response.put("success", true);
@@ -437,7 +498,6 @@ public class HomeRestController {
                 response.put("message", "Không tìm thấy sản phẩm trong danh sách yêu thích");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
@@ -548,227 +608,6 @@ public class HomeRestController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/orders/vnpay")
-    @ResponseBody
-    public ResponseEntity<?> createOrderVnpay(@RequestBody OrderRequestDTO request, HttpServletRequest httpRequest,
-                                              HttpSession session) {
-        Account account = null;
-        Cookie[] cookies = httpRequest.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("accountName".equals(cookie.getName())) {
-                    account = this.accountService.findByname(cookie.getValue()).orElse(null);
-                    break;
-                }
-            }
-        }
-        if (account == null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "fail");
-            response.put("message", "Bạn cần đăng nhập");
-            return ResponseEntity.ok(response);
-        }
-
-        List<Product> cart = (List<Product>) session.getAttribute("cart");
-        if (cart == null || cart.isEmpty()) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "fail");
-            response.put("message", "Giỏ hàng trống");
-            return ResponseEntity.ok(response);
-        }
-
-        double total = cart.stream().mapToDouble(p -> p.getPrice() * p.getAmount()).sum();
-        String txnRef = String.valueOf(System.currentTimeMillis());
-
-        Order order = new Order();
-        long millis = System.currentTimeMillis();
-        java.sql.Date date = new java.sql.Date(millis);
-        LocalDate localDate = date.toLocalDate();
-
-        order.setAccount(account);
-        order.setOrderDateImport(localDate);
-        order.setReceiverName(request.getReceiverName());
-        order.setReceiverPhone(request.getReceiverPhone());
-        order.setShippingAddress(request.getShippingAddress());
-        order.setNote(request.getNote());
-
-        order.setStatus("CHỜ THANH TOÁN");
-        order.setPaymentMethod("VNPAY");
-        order.setOrderTotal(total);
-        order.setTxnRef(txnRef);
-
-        orderService.save(order);
-
-        Set<OrderDetail> setDetail = new HashSet<>();
-        for (Product product : cart) {
-            OrderDetail s = new OrderDetail();
-            s.setProduct(product);
-            s.setAmount(product.getAmount());
-            s.setPrice(product.getPrice());
-            s.setOrder(order);
-            setDetail.add(s);
-
-            orderDetailService.save(s);
-        }
-        order.setOrderDetails(setDetail);
-
-        session.setAttribute("cart", new ArrayList<>());
-        session.removeAttribute("cart");
-
-        Map<String, Object> res = new HashMap<>();
-        res.put("status", "success");
-        res.put("orderId", order.getOrderID());
-        res.put("txnRef", txnRef);
-        res.put("total", total);
-        return ResponseEntity.ok(res);
-    }
-
-    @PostMapping("/create-payment")
-    @ResponseBody
-    public ResponseEntity<?> createPayment(@RequestParam("txnRef") String txnRef,
-                                           HttpServletRequest request) throws UnsupportedEncodingException {
-        Order order = orderService.findByTxnRef(txnRef);
-        if (order == null) {
-            Map<String, Object> res = new HashMap<>();
-            res.put("status", "fail");
-            res.put("message", "Không tìm thấy đơn hàng với txnRef: " + txnRef);
-            return ResponseEntity.ok(res);
-        }
-
-        double total = order.getOrderTotal();
-
-        Map<String, String> vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", "2.1.0");
-        vnp_Params.put("vnp_Command", "pay");
-        vnp_Params.put("vnp_TmnCode", VnpayConfig.vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf((long) (total * 100)));
-        vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", txnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toán đơn hàng #" + order.getOrderID());
-        vnp_Params.put("vnp_OrderType", "other");
-        vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", VnpayConfig.vnp_ReturnUrl);
-        vnp_Params.put("vnp_IpAddr", request.getRemoteAddr());
-
-        String vnp_CreateDate = new SimpleDateFormat("yyyyMMddHHmmss")
-                .format(Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7")).getTime());
-        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-
-        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
-        Collections.sort(fieldNames);
-        StringBuilder hashData = new StringBuilder();
-        StringBuilder query = new StringBuilder();
-
-        for (int i = 0; i < fieldNames.size(); i++) {
-            String field = fieldNames.get(i);
-            String value = vnp_Params.get(field);
-            if (value != null && !value.isEmpty()) {
-                hashData.append(field).append('=').append(URLEncoder.encode(value, "UTF-8"));
-                query.append(field).append('=').append(URLEncoder.encode(value, "UTF-8"));
-                if (i < fieldNames.size() - 1) {
-                    hashData.append('&');
-                    query.append('&');
-                }
-            }
-        }
-
-        String secureHash = VnpayConfig.hmacSHA512(VnpayConfig.vnp_HashSecret, hashData.toString());
-        query.append("&vnp_SecureHash=").append(secureHash);
-
-        String paymentUrl = VnpayConfig.vnp_PayUrl + "?" + query.toString();
-
-        Map<String, Object> res = new HashMap<>();
-        res.put("status", "success");
-        res.put("paymentUrl", paymentUrl);
-        res.put("orderId", order.getOrderID());
-        res.put("txnRef", txnRef);
-
-        return ResponseEntity.ok(res);
-    }
-
-    @GetMapping("/vnpay-return")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> vnpayReturn(HttpServletRequest request) {
-        Map<String, Object> result = new HashMap<>();
-        try {
-            Map<String, String> params = new HashMap<>();
-            request.getParameterMap().forEach((k, v) -> {
-                if (v != null && v.length > 0) params.put(k, v[0]);
-            });
-
-            String vnpSecureHash = params.remove("vnp_SecureHash");
-            params.remove("vnp_SecureHashType");
-
-            Map<String, String> vnpParams = params.entrySet().stream()
-                    .filter(e -> e.getKey() != null && e.getKey().startsWith("vnp_"))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-            List<String> fieldNames = new ArrayList<>(vnpParams.keySet());
-            Collections.sort(fieldNames);
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < fieldNames.size(); i++) {
-                String key = fieldNames.get(i);
-                String value = vnpParams.get(key);
-                String encoded = value == null ? "" : URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-                sb.append(key).append('=').append(encoded);
-                if (i < fieldNames.size() - 1) sb.append('&');
-            }
-            String hashData = sb.toString();
-
-            String signValue = VnpayConfig.hmacSHA512(VnpayConfig.vnp_HashSecret, hashData);
-
-            if (vnpSecureHash != null && signValue.equalsIgnoreCase(vnpSecureHash)) {
-                String responseCode = vnpParams.get("vnp_ResponseCode");
-                String txnRef = vnpParams.get("vnp_TxnRef");
-                System.out.println("ResponseCode: " + vnpParams.get("vnp_ResponseCode"));
-                System.out.println("TxnRef: " + vnpParams.get("vnp_TxnRef"));
-                System.out.println("SecureHash (VNPay): " + vnpSecureHash);
-                System.out.println("SignValue (server): " + signValue);
-                if ("00".equals(responseCode)) {
-                    Order order = orderService.findByTxnRef(txnRef);
-                    if (order == null) {
-                        System.out.println("Không tìm thấy order với txnRef = " + txnRef);
-                    }
-                    if (order != null) {
-                        order.setStatus("Chờ duyệt");
-                        orderService.save(order);
-                        System.out.println("Cập nhật Order ID " + order.getOrderID() + " thành ĐÃ THANH TOÁN");
-                    }
-
-                    HttpSession session = request.getSession(false);
-                    if (session != null) {
-                        session.removeAttribute("cart");
-                        session.removeAttribute("currentStep");
-                    }
-
-                    result.put("status", "success");
-                    result.put("message", "Thanh toán thành công");
-                } else {
-                    Order order = orderService.findByTxnRef(txnRef);
-                    if (order != null) {
-                        order.setStatus("THANH TOÁN THẤT BẠI");
-                        orderService.save(order);
-                    }
-
-                    result.put("status", "failed");
-                    result.put("message", "Thanh toán thất bại, mã lỗi: " + responseCode);
-                }
-                result.put("amount", vnpParams.get("vnp_Amount"));
-                result.put("orderId", vnpParams.get("vnp_TxnRef"));
-            } else {
-                result.put("status", "error");
-                result.put("message", "Sai chữ ký (checksum)");
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            result.put("status", "error");
-            result.put("message", "Lỗi xử lý: " + ex.getMessage());
-        }
-        return ResponseEntity.ok(result);
-    }
-
     public ProductVoteDTO convertToDTO(ProductVote vote) {
         ProductVoteDTO dto = new ProductVoteDTO();
         dto.setProductVoteID(vote.getProductVoteID());
@@ -868,14 +707,10 @@ public class HomeRestController {
                 productMap.put("total", od.getPrice() * od.getAmount());
                 productOrders.add(productMap);
             }
-
             response.put("oldOrders", productOrders);
-
             return ResponseEntity.ok(response);
-
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.singletonMap("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", e.getMessage()));
         }
     }
 
@@ -897,7 +732,6 @@ public class HomeRestController {
         dto.setEmail(account.getEmail());
         dto.setPhoneNumber(account.getPhoneNumber());
         dto.setLocal(account.getLocal());
-
         dto.setReceiverName(account.getUsername());
         dto.setReceiverPhone(account.getPhoneNumber());
         dto.setShippingAddress(account.getLocal());
