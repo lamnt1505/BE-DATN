@@ -4,12 +4,26 @@ import com.vnpt.mini_project_java.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
+
+    @Async
+    public void sendOrderEmailAsync(String email, Order order) {
+        try {
+            Thread.sleep(30 * 1000);
+            sendOrderEmail(email, order);
+            System.out.println("Email sent successfully");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
     public void sendOrderEmail(String toEmail, Order order) {
         String subject = "[Mini-Shop] Xác nhận Đặt hàng #" + order.getOrderID();

@@ -1,7 +1,5 @@
 package com.vnpt.mini_project_java.restcontroller;
 
-import com.cloudinary.Cloudinary;
-import com.vnpt.mini_project_java.config.VnpayConfig;
 import com.vnpt.mini_project_java.dto.*;
 import com.vnpt.mini_project_java.entity.*;
 import com.vnpt.mini_project_java.respository.DiscountRepository;
@@ -36,10 +34,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;

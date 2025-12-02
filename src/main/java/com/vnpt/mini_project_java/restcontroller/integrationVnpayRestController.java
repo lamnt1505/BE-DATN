@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -134,8 +132,6 @@ public class integrationVnpayRestController {
         order.setTxnRef(txnRef);
 
         orderService.save(order);
-        emailService.sendOrderEmail(account.getEmail(), order);
-        logger.info("Đã gửi email xác nhận đơn hàng đến {}", account.getEmail());
 
         Set<OrderDetail> setDetail = new HashSet<>();
         for (Product product : cart) {
@@ -161,6 +157,7 @@ public class integrationVnpayRestController {
         res.put("total", total);
         return ResponseEntity.ok(res);
     }
+
     @PostMapping("/create-payment")
     @ResponseBody
     public ResponseEntity<?> createPayment(@RequestParam("txnRef") String txnRef,
@@ -298,6 +295,8 @@ public class integrationVnpayRestController {
     @GetMapping("/vnpay-return")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> vnpayReturn(HttpServletRequest request) {
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+        Account account = null;
         Map<String, Object> result = new HashMap<>();
         try {
             Map<String, String> params = new HashMap<>();
@@ -339,6 +338,7 @@ public class integrationVnpayRestController {
                     if (order != null) {
                         order.setStatus("Chờ duyệt");
                         orderService.save(order);
+                        emailService.sendOrderEmailAsync(order.getAccount().getEmail(), order);
                     }
 
                     Set<OrderDetail> orderDetails = order.getOrderDetails();
@@ -381,7 +381,6 @@ public class integrationVnpayRestController {
                 result.put("status", "error");
                 result.put("message", "Sai chữ ký (checksum)");
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
             result.put("status", "error");
