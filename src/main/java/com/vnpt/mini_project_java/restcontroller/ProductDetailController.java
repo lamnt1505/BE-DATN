@@ -9,13 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/productdetail", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProductDetailRestController {
+public class ProductDetailController {
     @Autowired
     private ProductDetailService productDetailService;
 

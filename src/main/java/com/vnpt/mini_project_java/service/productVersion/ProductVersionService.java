@@ -15,4 +15,10 @@ public interface ProductVersionService {
     List<ProductVersion> findAll();
 
     List<ProductVersion> findAllByProductId(long productID);
+
+    ProductVersionDTO createProductVersion(ProductVersionDTO productVersionDTO);
+
+    ProductVersionDTO updateProductVersion(Long versionID, ProductVersionDTO productVersionDTO);
+
+    void deleteProductVersion(Long versionID);
 }

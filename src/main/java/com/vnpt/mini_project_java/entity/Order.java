@@ -22,6 +22,9 @@ public class Order {
     @Column(name = "order_id")
     private Long orderID;
 
+    @Column(name = "order_number")
+    private Long orderNumber;
+
     @Column(name = "order_import")
     private LocalDate orderDateImport;
 
@@ -29,7 +32,7 @@ public class Order {
     private String status;
 
     @Column(name = "payment_method", length = 50)
-    private String paymentMethod; // "COD", "VNPAY", "MOMO"...
+    private String paymentMethod;
 
     @Column(name = "order_total")
     private double orderTotal;

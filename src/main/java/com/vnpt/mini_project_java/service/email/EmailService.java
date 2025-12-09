@@ -1,5 +1,6 @@
 package com.vnpt.mini_project_java.service.email;
 
+
 import com.vnpt.mini_project_java.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,6 +18,19 @@ public class EmailService {
         try {
             Thread.sleep(30 * 1000);
             sendOrderEmail(email, order);
+            System.out.println("Email sent successfully");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    @Async
+    public void sendCancelOrderEmailAsync(String email, Order order) {
+        try {
+            Thread.sleep(30 * 1000);
+            sendCancelOrderEmail(email, order);
             System.out.println("Email sent successfully");
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

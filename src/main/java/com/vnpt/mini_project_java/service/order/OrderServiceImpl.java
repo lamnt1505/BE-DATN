@@ -31,8 +31,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public <S extends Order> S save(S entity) {
-        return orderRepository.save(entity);
+        Order order = (Order) entity;
+
+        if (order.getAccount() != null) {
+
+            Order lastOrder = orderRepository.findTopByAccountOrderByOrderNumberDesc(order.getAccount());
+            if (lastOrder != null) {
+                order.setOrderNumber(lastOrder.getOrderNumber() + 1);
+            } else {
+                order.setOrderNumber(1L);
+            }
+        }
+        return (S) orderRepository.save(order);
+        //return orderRepository.save(entity);
     }
+
     @Override
     public List<Order> listOrder() {
         return orderRepository.findAll();

@@ -18,7 +18,7 @@ import java.util.*;
 @RequestMapping(value = "/api/v1/discounts", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:3000,http://localhost:3005", allowCredentials = "true")
 @Component
-public class DiscountRestController {
+public class DiscountController {
     @Autowired
     private DiscountService discountService;
 

@@ -13,24 +13,14 @@ import com.vnpt.mini_project_java.service.orderDetail.OrderDetailService;
 import com.vnpt.mini_project_java.service.product.ProductService;
 import com.vnpt.mini_project_java.service.productvotes.ProductVotesService;
 import com.vnpt.mini_project_java.service.storage.StorageService;
-import com.vnpt.mini_project_java.spec.ProductSpecifications;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -42,8 +32,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-public class HomeRestController {
-
+public class OrderController {
     @Autowired
     private EmailService emailService;
 
@@ -63,9 +52,6 @@ public class HomeRestController {
     private StorageService storageService;
 
     @Autowired
-    private FavoriteService favoriteService;
-
-    @Autowired
     ProductVotesService productVotesService;
 
     @Autowired
@@ -80,74 +66,6 @@ public class HomeRestController {
     private void logToConsoleAndFile(String message) {
         Logger logger = LoggerFactory.getLogger(this.getClass());
         logger.info(message);
-    }
-
-    @GetMapping(value ="/dossier-statistic/list--Product")
-    public ResponseEntity<?> showListProduct() {
-        return ResponseEntity.ok(this.productService.getAllProductDTO());
-    }
-
-    @PostMapping(value ="/dossier-statistic/list--ProductById--Category--Filter/{categoryID}")
-    @ResponseBody
-    public List<ProductDTO> showListProductByIdCategory(@PathVariable("categoryID") long id) {
-        List<Product> productList = this.productService.showListProductByIdCategoryFilter(id);
-        List<ProductDTO> productDTOList = new ArrayList<>();
-        for (Product product : productList) {
-            ProductDTO productDTO = new ProductDTO();
-            productDTO.setId(product.getProductID());
-            productDTO.setName(product.getProductName());
-            productDTO.setDescription(product.getDescription());
-            productDTO.setImage(product.getImage());
-            productDTO.setPrice(product.getPrice());
-            productDTO.setCategoryID(product.getCategory().getCategoryID());
-            productDTOList.add(productDTO);
-        }
-        return productDTOList;
-    }
-
-    @GetMapping(value ="/dossier-statistic/list--Product--PriceDesc")
-    public ResponseEntity<List<ProductDTO>> showListProductPriceDesc() {
-        List<Product> productList = this.productService.listProductPriceDesc();
-        List<ProductDTO> productDTOList = convertToDTOList(productList);
-        return ResponseEntity.ok(productDTOList);
-    }
-
-    @GetMapping(value ="/dossier-statistic/list--Product--PriceAsc")
-    public ResponseEntity<List<ProductDTO>> showListProductPriceAsc() {
-        List<Product> productList = this.productService.listProductPriceAsc();
-        List<ProductDTO> productDTOList = convertToDTOList(productList);
-        return ResponseEntity.ok(productDTOList);
-    }
-    private List<ProductDTO> convertToDTOList(List<Product> productList) {
-        List<ProductDTO> productDTOList = new ArrayList<>();
-        for (Product product : productList) {
-            ProductDTO productDTO = new ProductDTO();
-            productDTO.setId(product.getProductID());
-            productDTO.setName(product.getProductName());
-            productDTO.setImage(product.getImage());
-            productDTO.setPrice(product.getPrice());
-            productDTOList.add(productDTO);
-        }
-        return productDTOList;
-    }
-
-    @GetMapping(value ="/dossier-statistic/list--Product--NewBest")
-    public ResponseEntity<List<ProductDTO>> showListProductNewBest() {
-        List<Product> productList = this.productService.listProductNewBest();
-
-        List<ProductDTO> productDTOList = new ArrayList<>();
-
-        for (Product product : productList) {
-            ProductDTO productDTO = new ProductDTO();
-            productDTO.setId(product.getProductID());
-            productDTO.setName(product.getProductName());
-            productDTO.setImage(product.getImage());
-            productDTO.setPrice(product.getPrice());
-
-            productDTOList.add(productDTO);
-        }
-
-        return ResponseEntity.ok(productDTOList);
     }
 
     @PostMapping(value ="/dossier-statistic/insert-product")
@@ -194,10 +112,10 @@ public class HomeRestController {
                 }
             }
         }
-        String username = (accountId != -1) ? accountService.findById(accountId).get().getAccountName() : "unknown";
+        String username = (accountId != -1) ? accountService.findById(accountId).get().getAccountName() : "Khách Hàng";
         String productName = productOrder.getProductName();
         String logMessage = "Người dùng '" + username + "' đã mua " + amount + " Đơn Vị Sản Phẩm '" + productName
-                + "' Vào Gio Hang.";
+                + "' Vào Giỏ Hàng";
         logToConsoleAndFile(logMessage);
         logger.info(logMessage);
         return Product.CartUpdateStatus.SUCCESS;
@@ -207,30 +125,30 @@ public class HomeRestController {
     @ResponseBody
     public String updateQuantity(@RequestParam(name = "productID") long productID,
                                  @RequestParam(name = "amount") int amount, HttpSession session) {
-        if (amount < 0) {
+        if (amount < 0) {// trả về lỗi
             return "0";
-        } else if (amount == 0) {
+        } else if (amount == 0) {// xóa sản phẩm khỏi gi hàng
             List<Product> list = (List<Product>) session.getAttribute("cart");
             for (int i = 0; i < list.size(); i++) {
                 if (productID == list.get(i).getProductID()) {
-                    list.remove(i);
-                    session.setAttribute("cart", list);
-                    return "2";
+                    list.remove(i);// Xóa sản phẩm
+                    session.setAttribute("cart", list);// Cập nhật session
+                    return "2";// thành cong
                 }
             }
         } else if (session.getAttribute("cart") != null) {
             List<Product> list = (List<Product>) session.getAttribute("cart");
             for (int i = 0; i < list.size(); i++) {
                 if (productID == list.get(i).getProductID()) {
-                    list.get(i).setAmount(amount);
+                    list.get(i).setAmount(amount);// cap nhat so luong
                     session.setAttribute("cart", list);
                     return "1";
                 }
             }
         } else {
-            return "0";
+            return "0";//gior hang rong
         }
-        return "0";
+        return "0";//Không tìm thấy sản phẩm
     }
 
     @PostMapping(value = "/dossier-statistic/orders")
@@ -240,20 +158,10 @@ public class HomeRestController {
 
         logger.info("========== BẮT ĐẦU TẠO ĐƠN HÀNG MỚI ==========");
         logger.info("Thời gian: {}", LocalDateTime.now());
-        /*        String accountName = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("accountName")) {
-                    accountName = cookie.getValue();
-                    account = this.accountService.findByname(cookie.getValue()).orElse(null);
-                    break;
-                }
-            }
-        }*/
+
         Account account = null;
         String accountIdHeader = request.getHeader("X-Account-ID");
-        if (accountIdHeader != null && !accountIdHeader.isEmpty()) {
+        if (accountIdHeader != null && !accountIdHeader.isEmpty()) {// tìm thông tin từ header
             try {
                 Long accountID = Long.parseLong(accountIdHeader);
                 account = this.accountService.findById(accountID).orElse(null);
@@ -264,7 +172,7 @@ public class HomeRestController {
         }
 
         if (account == null) {
-            Cookie[] cookies = request.getCookies();
+            Cookie[] cookies = request.getCookies();// tìm thông tin từ cookie voiws accountName
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("accountName")) {
@@ -279,7 +187,7 @@ public class HomeRestController {
             account = this.accountService.findById(accountID).orElse(null);
         }
 
-        if (account == null || account.getAccountID() <= 0) {
+        if (account == null || account.getAccountID() <= 0) {// kiemer tra xem account da login hay chua
             logger.error("Account not found or invalid.");
             return "0";
         }
@@ -287,26 +195,31 @@ public class HomeRestController {
         logger.info("Người dùng: {} (ID: {})", account.getAccountName(), account.getAccountID());
 
         List<Product> list = (List<Product>) session.getAttribute("cart");
-        if (list == null || list.isEmpty()) {
+        if (list == null || list.isEmpty()) {// kiem tra gio hang
             logger.error("Cart is empty or null.");
             return "-1";
         }
 
         Double discountedTotal = (Double) session.getAttribute("discountedTotal");
         if (discountedTotal == null) {
+            //check kiem tra co ma giam gia hay khong
             discountedTotal = 0.0;
             for (Product product : list) {
-                discountedTotal += product.getPrice() * product.getAmount();
+                discountedTotal += product.getPrice() * product.getAmount();// neu khong lay so luong product.getPrice() * product.getAmount()
             }
         }
 
         Order order = new Order();
+
+        //lay thong tin ngay hien tai
         long millis = System.currentTimeMillis();
         java.sql.Date date = new java.sql.Date(millis);
         LocalDate localDate = date.toLocalDate();
 
+        // ma giao dich don hang
         String txnRef = String.valueOf(System.currentTimeMillis());
 
+        //set cac thong tin don hang
         order.setOrderDateImport(localDate);
         order.setStatus("Chờ duyệt");
         order.setOrderTotal(discountedTotal);
@@ -323,16 +236,17 @@ public class HomeRestController {
         logger.info("-Người nhận: {}", orderRequest.getReceiverName());
         logger.info("-Phương thức thanh toán: {}", order.getPaymentMethod());
         try {
-            orderService.save(order);
-            logger.info("✅ Lưu đơn hàng thành công (ID: {})", order.getOrderID());
+            orderService.save(order);// luu trang thai don hang
+            logger.info("Lưu đơn hàng thành công (ID: {}, OrderNumber {})", order.getOrderID(), order.getOrderNumber());
 
-            emailService.sendOrderEmail(account.getEmail(), order);
+            emailService.sendOrderEmailAsync(order.getAccount().getEmail(), order);// gui email don hang
             logger.info("📩 Đã gửi email xác nhận đơn hàng đến {}", account.getEmail());
         } catch (Exception e) {
             logger.error("❌ LỖI khi lưu đơn hàng: {}", e.getMessage(), e);
             return "0";
         }
 
+        // luu thong tin chi tiet don hang
         Set<OrderDetail> setDetail = new HashSet<>();
         for (Product product : list) {
             OrderDetail s = new OrderDetail();
@@ -342,7 +256,7 @@ public class HomeRestController {
             s.setOrder(order);
             setDetail.add(s);
 
-            orderDetailService.save(s);
+            orderDetailService.save(s);// Lưu từng chi tiết vào database
             logger.debug("✅ Thêm sản phẩm '{}' (Số lượng: {}, Giá: {})",
                     product.getProductName(),
                     product.getAmount(),
@@ -363,24 +277,26 @@ public class HomeRestController {
         return "1";
     }
 
-    @PostMapping(value ="/dossier-statistic/cancel-order")
+    @PostMapping(value ="/dossier-statistic/cancel-order")//API huy don hang
     public ResponseEntity<?> cancelOrder(@RequestParam(name = "orderID") Long orderID,
                                          @RequestParam(name = "reason") String reason) {
         Logger logger = LoggerFactory.getLogger(this.getClass());
         try {
-            Order order = orderService.findById(orderID);
+            Order order = orderService.findById(orderID);// tim theo ID don hang
             if (order == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy đơn hàng");
             }
-            if (!"Chờ duyệt".equals(order.getStatus())) {
+            if (!"Chờ duyệt".equals(order.getStatus())) {//trang thai cho duyet moi cho huy
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đơn hàng không thể hủy bỏ");
             }
 
+            //luu thong tin huy
             order.setStatus("Đã Hủy");
             order.setNote(reason);
             orderService.save(order);
 
-            emailService.sendCancelOrderEmail(order.getAccount().getEmail(), order);
+            // gui thong tin email
+            emailService.sendCancelOrderEmailAsync(order.getAccount().getEmail(), order);
             logger.info("📧 Đã gửi email hủy đơn hàng đến {}", order.getAccount().getEmail());
 
             Map<String, Object> response = new HashMap<>();
@@ -394,58 +310,34 @@ public class HomeRestController {
         }
     }
 
-    @PostMapping(value ="/dossier-statistic/search")
-    public ResponseEntity<?> searchProducts(@RequestBody ProductSearchCriteriaDTO criteria, Pageable pageable) {
-        try {
-            Specification<Product> spec = ProductSpecifications.searchByCriteria(criteria);
-
-            Page<Product> products = productService.findAll(spec, pageable);
-
-            Page<ProductDTO> productDTOs = products.map(ProductDTO::new);
-
-            return ResponseEntity.ok(productDTOs);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Lỗi: " + e.getMessage());
-        }
-    }
-
-    @GetMapping(value ="/dossier-statistic/cart/quantity")
-    @ResponseBody
-    public int getCartQuantity(HttpSession session) {
-        List<Product> cart = (List<Product>) session.getAttribute("cart");
-        if (cart == null) {
-            return 0;
-        }
-        return cart.stream().mapToInt(Product::getAmount).sum();
-    }
-
     @PostMapping(value = "/dossier-statistic/--update-status")
-    @ResponseBody
+    @ResponseBody//API cap nhat trang thai don hang
     public Order.UpdateStatus updateOrderStatus(@RequestParam(name = "orderid") Long orderID,
-                                    @RequestParam(name = "status") String status) {
-        Order order = orderService.findById(orderID);
+                                                @RequestParam(name = "status") String status) {
+        Order order = orderService.findById(orderID);//tim theo id don hang
         if (order == null) {
-            return Order.UpdateStatus.ORDERID_NOT_FOUND;
+            return Order.UpdateStatus.ORDERID_NOT_FOUND;// tra thong bao khong tim thay don hang
         }
         order.setStatus(status);
         for (OrderDetail detail : order.getOrderDetails()) {
             Storage storageProduct = storageService.findQuatityProduct(detail.getProduct().getProductID());
             if (storageProduct == null) {
-                return Order.UpdateStatus.STORAGE_NOT_FOUND;
+                return Order.UpdateStatus.STORAGE_NOT_FOUND;//khong ton tai san pham trong kho
             }
             if (storageProduct.getQuantity() < detail.getAmount()) {
-                return Order.UpdateStatus.INSUFFICIENT_QUANTITY;
+                return Order.UpdateStatus.INSUFFICIENT_QUANTITY;// so luong trong kho khong du
             }
         }
+        // so luong trong kho tru khi trang thai don hang hoan thanh
         if (status.equals("Hoàn thành")) {
             for (OrderDetail detail : order.getOrderDetails()) {
                 Storage storageProduct = storageService.findQuatityProduct(detail.getProduct().getProductID());
 
                 if (storageProduct != null) {
-                    storageProduct.setQuantity(storageProduct.getQuantity() - detail.getAmount());
-                    storageService.save(storageProduct);
+                    storageProduct.setQuantity(storageProduct.getQuantity() - detail.getAmount());// giam so luong trong kho
+                    storageService.save(storageProduct);// luu db
                 } else {
-                    return Order.UpdateStatus.STORAGE_NOT_FOUND;
+                    return Order.UpdateStatus.STORAGE_NOT_FOUND;//kho khong ton tai
                 }
             }
         }
@@ -453,67 +345,7 @@ public class HomeRestController {
         return Order.UpdateStatus.SUCCESS;
     }
 
-    @PostMapping(value ="/dossier-statistic/add--favorite")
-    public ResponseEntity<String> addToFavorite(@RequestParam(required = false) Long accountID,
-                                                @RequestParam(required = false) Long productID) {
-        if (accountID == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("⚠️ Bạn cần đăng nhập để thêm sản phẩm yêu thích!");
-        }
-        if (productID == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Thiếu mã sản phẩm!");
-        }
-        String result = favoriteService.addProductToFavorite(accountID, productID);
-        HttpStatus status = result.contains("Đã thêm") ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
-        return new ResponseEntity<>(result, status);
-    }
-
-    @GetMapping(value ="/dossier-statistic/list--favorite")
-    public ResponseEntity<List<FavoriteDTO>> getFavoriteList(@RequestParam Long accountID) {
-        List<FavoriteDTO> favoriteProducts = favoriteService.getFavoritesByAccountId(accountID);
-        if (favoriteProducts.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(favoriteProducts, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/dossier-statistic/{accountId}/{productId}")
-    public ResponseEntity<?> removeFavorite(@PathVariable Long accountId, @PathVariable Long productId) {
-        try {
-            boolean removed = favoriteService.removeFavorite(accountId, productId);
-            Map<String, Object> response = new HashMap<>();
-            if (removed) {
-                response.put("success", true);
-                response.put("message", "Đã xóa sản phẩm khỏi danh sách yêu thích");
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("success", false);
-                response.put("message", "Không tìm thấy sản phẩm trong danh sách yêu thích");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-            }
-        } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", "Lỗi hệ thống: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-    }
-
-    @PostMapping(value = "/dossier-statistic/add--vote")
-    public ResponseEntity<?> createVote(@RequestBody ProductVoteDTO voteDTO) {
-        try {
-            ProductVote vote = productVotesService.saveVote(voteDTO);
-            ProductVoteDTO responseDTO = convertToDTO(vote);
-            return ResponseEntity.ok(responseDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không thể lưu đánh giá.");
-        }
-    }
-
-    @PostMapping(value ="/dossier-statistic/apply")
+    @PostMapping(value ="/dossier-statistic/apply")// api su dung ma giam gia
     public ResponseEntity<Map<String, Object>> applyDiscount(@RequestBody Map<String, Object> requestData,
                                                              HttpSession session) {
         Map<String, Object> response = new HashMap<>();
@@ -602,22 +434,6 @@ public class HomeRestController {
         return ResponseEntity.ok(response);
     }
 
-    public ProductVoteDTO convertToDTO(ProductVote vote) {
-        ProductVoteDTO dto = new ProductVoteDTO();
-        dto.setProductVoteID(vote.getProductVoteID());
-        dto.setRating(vote.getRating());
-        dto.setComment(vote.getComment());
-        if (vote.getAccount() != null) {
-            dto.setAccountID(vote.getAccount().getAccountID());
-        } else {
-            dto.setAccountID(null);
-        }
-        dto.setProductID(vote.getProduct().getProductID());
-        dto.setCreatedAt(vote.getCreatedAt());
-        dto.setUpdatedAt(vote.getUpdatedAt());
-        return dto;
-    }
-
     @GetMapping("/dossier-statistic/summary")
     public ResponseEntity<List<OrderSummaryDTO>> listOrderSummary() {
         List<Order> orders = orderService.listOrder();
@@ -647,6 +463,7 @@ public class HomeRestController {
         for (Order order : orders) {
             Map<String, Object> orderMap = new HashMap<>();
             orderMap.put("orderId", order.getOrderID());
+            orderMap.put("orderNumber", order.getOrderNumber());
             orderMap.put("orderDate", order.getOrderDateImport());
             orderMap.put("status", order.getStatus());
             orderMap.put("orderTotal", order.getOrderTotal());
@@ -733,22 +550,14 @@ public class HomeRestController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/dossier-statistic/products")
-    public ResponseEntity<Page<ProductDTO>> getPaginatedProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size,
-            @RequestParam(defaultValue = "productID,asc") String[] sort) {
-
-        String[] sortParams = sort.clone();
-        String sortField = sortParams[0];
-        Sort.Direction sortDirection = sortParams.length > 1
-                ? Sort.Direction.fromString(sortParams[1])
-                : Sort.Direction.ASC;
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortField));
-
-        Page<ProductDTO> products = productService.getPaginatedProducts(pageable);
-        return ResponseEntity.ok(products);
+    @GetMapping(value ="/dossier-statistic/cart/quantity")
+    @ResponseBody
+    public int getCartQuantity(HttpSession session) {
+        List<Product> cart = (List<Product>) session.getAttribute("cart");
+        if (cart == null) {
+            return 0;
+        }
+        return cart.stream().mapToInt(Product::getAmount).sum();
     }
 
     @GetMapping("/payment-method")
@@ -756,4 +565,3 @@ public class HomeRestController {
         return orderService.getPaymentStatistics();
     }
 }
-

@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/statistics")
-public class StatisticsRestController {
+public class StatisticsController {
     @Autowired
     private OrderStatisticsRepository statisticsRepository;
 

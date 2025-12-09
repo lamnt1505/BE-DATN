@@ -22,7 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/trademark", produces = MediaType.APPLICATION_JSON_VALUE)
-public class TrademarkRestController {
+public class TrademarkController {
 
     @Autowired
     private TrademarkService trademarkService;

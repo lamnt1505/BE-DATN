@@ -1,6 +1,5 @@
 package com.vnpt.mini_project_java.restcontroller;
 
-import com.cloudinary.Cloudinary;
 import com.vnpt.mini_project_java.config.VnpayConfig;
 import com.vnpt.mini_project_java.dto.OrderRequestDTO;
 import com.vnpt.mini_project_java.entity.Account;
@@ -35,7 +34,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-public class integrationVnpayRestController {
+public class integrationVnpayController {
 
     @Autowired
     private EmailService emailService;
@@ -109,7 +108,13 @@ public class integrationVnpayRestController {
             return ResponseEntity.ok(response);
         }
 
-        double total = cart.stream().mapToDouble(p -> p.getPrice() * p.getAmount()).sum();
+        Double total = (Double) session.getAttribute("discountedTotal");
+        if (total == null) {
+            total = cart.stream().mapToDouble(p -> p.getPrice() * p.getAmount()).sum();
+        }
+
+        logger.info("Tổng tiền (sau giảm giá): {}", total);
+
         String txnRef = String.valueOf(System.currentTimeMillis()) +
                 "_" +
                 UUID.randomUUID().toString().substring(0, 8);
@@ -147,12 +152,13 @@ public class integrationVnpayRestController {
 
         session.setAttribute("cart", new ArrayList<>());
         session.removeAttribute("cart");
-
+        session.removeAttribute("discountedTotal");
         session.setAttribute("currentTxnRef", txnRef);
 
         Map<String, Object> res = new HashMap<>();
         res.put("status", "success");
         res.put("orderId", order.getOrderID());
+        res.put("orderNumber", order.getOrderNumber());
         res.put("txnRef", txnRef);
         res.put("total", total);
         return ResponseEntity.ok(res);
@@ -361,6 +367,9 @@ public class integrationVnpayRestController {
                     if (session != null) {
                         session.removeAttribute("cart");
                         session.removeAttribute("currentStep");
+                        session.removeAttribute("discountedTotal");
+                        session.removeAttribute("currentDiscount");
+                        session.removeAttribute("currentTxnRef");
                     }
 
                     result.put("status", "success");
@@ -375,6 +384,7 @@ public class integrationVnpayRestController {
                     result.put("status", "failed");
                     result.put("message", "Thanh toán thất bại, mã lỗi: " + responseCode);
                 }
+                //result.put("amount", order != null ? order.getOrderTotal() : vnpParams.get("vnp_Amount"));
                 result.put("amount", vnpParams.get("vnp_Amount"));
                 result.put("orderId", vnpParams.get("vnp_TxnRef"));
             } else {

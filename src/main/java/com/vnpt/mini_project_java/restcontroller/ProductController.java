@@ -2,10 +2,8 @@ package com.vnpt.mini_project_java.restcontroller;
 
 
 import com.vnpt.mini_project_java.dto.ProductDTO;
-import com.vnpt.mini_project_java.dto.ProductDetailDTO;
 import com.vnpt.mini_project_java.dto.ProductDetailiDDTO;
 import com.vnpt.mini_project_java.entity.Product;
-import com.vnpt.mini_project_java.entity.ProductDetail;
 import com.vnpt.mini_project_java.entity.ProductVersion;
 import com.vnpt.mini_project_java.projections.StatisticalForMonthProjections;
 import com.vnpt.mini_project_java.projections.StatisticalForYearProjections;
@@ -16,7 +14,6 @@ import com.vnpt.mini_project_java.service.productVersion.ProductVersionService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import com.vnpt.mini_project_java.service.statistical.StatisticalService;
-import com.vnpt.mini_project_java.service.storage.StorageService;
 import com.vnpt.mini_project_java.util.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -41,9 +38,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/product", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProductRestController {
+public class ProductController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
     private final ProductService productService;
@@ -57,9 +54,9 @@ public class ProductRestController {
     @Autowired
     private final ProductVersionService productVersionService;
 
-    public ProductRestController(ProductService productService, StatisticalService statisticsService,
-                                 ProductDetailService productDetailService,
-                                 ProductVersionService productVersionService) {
+    public ProductController(ProductService productService, StatisticalService statisticsService,
+                             ProductDetailService productDetailService,
+                             ProductVersionService productVersionService) {
         this.productService = productService;
         this.statisticsService = statisticsService;
         this.productDetailService = productDetailService;

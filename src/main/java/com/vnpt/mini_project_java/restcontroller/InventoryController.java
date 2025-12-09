@@ -15,18 +15,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/v1/inventory", produces = MediaType.APPLICATION_JSON_VALUE)
-public class InventoryRestController {
+public class InventoryController {
 
     @Autowired
     private InventoryService inventoryService;
 
     @GetMapping("/check/{branchID}/{productID}")
-    public ResponseEntity<Map<String, Object>> checkStock(
-            @PathVariable Long branchID,
-            @PathVariable Long productID) {
-
+    public ResponseEntity<Map<String, Object>> checkStock(@PathVariable Long branchID, @PathVariable Long productID) {
         Optional<Inventory> inv = inventoryService.checkStock(branchID, productID);
-
         Map<String, Object> response = new HashMap<>();
         if (!inv.isPresent() || inv.get().getQuantity() <= 0) {
             response.put("status", "Hết hàng");
@@ -37,7 +33,6 @@ public class InventoryRestController {
             response.put("message", "Còn hàng");
             response.put("quantity", inv.get().getQuantity());
         }
-
         return ResponseEntity.ok(response);
     }
 

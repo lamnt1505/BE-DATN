@@ -2,9 +2,6 @@ package com.vnpt.mini_project_java.restcontroller;
 
 import javax.persistence.EntityNotFoundException;
 
-import com.vnpt.mini_project_java.dto.CategoryDTO;
-import com.vnpt.mini_project_java.dto.ProductDTO;
-import com.vnpt.mini_project_java.entity.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +18,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/storage", produces = MediaType.APPLICATION_JSON_VALUE)
-public class StorageRestcontroller {
+public class StorageController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
 	@Autowired
 	private final StorageService storageService;
 	
-	public StorageRestcontroller(StorageService storageService) {
+	public StorageController(StorageService storageService) {
 		this.storageService = storageService;
 	}
 

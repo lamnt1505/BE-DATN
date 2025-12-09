@@ -6,17 +6,13 @@ import com.vnpt.mini_project_java.service.productVersion.ProductVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/product/version", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProductVersionRestController {
-
+public class ProductVersionController {
     @Autowired
     private ProductVersionService productVersionService;
 
@@ -36,5 +32,35 @@ public class ProductVersionRestController {
         ProductVersion productVersion = productVersionService.getProductVersionById(versionID);
         ProductVersionDTO prodouctVersionResponse = new ProductVersionDTO(productVersion);
         return ResponseEntity.ok().body(prodouctVersionResponse);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createProductVersion(@RequestBody ProductVersionDTO productVersionDTO) {
+        try {
+            ProductVersionDTO createdVersion = productVersionService.createProductVersion(productVersionDTO);
+            return ResponseEntity.status(201).body(createdVersion);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("{versionID}/update")
+    public ResponseEntity<?> updateProductVersion(@PathVariable Long versionID, @RequestBody ProductVersionDTO productVersionDTO) {
+        try {
+            ProductVersionDTO updatedVersion = productVersionService.updateProductVersion(versionID, productVersionDTO);
+            return ResponseEntity.ok(updatedVersion);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("{versionID}/delete")
+    public ResponseEntity<?> deleteProductVersion(@PathVariable Long versionID) {
+        try {
+            productVersionService.deleteProductVersion(versionID);
+            return ResponseEntity.ok("✅ Xóa ProductVersion thành công");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 }

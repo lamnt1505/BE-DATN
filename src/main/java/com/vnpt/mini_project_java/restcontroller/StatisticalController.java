@@ -32,7 +32,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/export", produces = MediaType.APPLICATION_JSON_VALUE)
-public class StatisticalRestController {
+public class StatisticalController {
 
     private final StatisticalService statisticsService;
 
@@ -40,7 +40,7 @@ public class StatisticalRestController {
 
     private final DiscountUsageRepository discountUsageRepository;
 
-    public StatisticalRestController(StatisticalService statisticsService, OrderService orderService, DiscountUsageRepository discountUsageRepository) {
+    public StatisticalController(StatisticalService statisticsService, OrderService orderService, DiscountUsageRepository discountUsageRepository) {
         this.statisticsService = statisticsService;
         this.orderService = orderService;
         this.discountUsageRepository = discountUsageRepository;

@@ -1,5 +1,6 @@
 package com.vnpt.mini_project_java.restcontroller;
 
+
 import com.google.firebase.database.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,19 +9,21 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(
-            @RequestParam String sender,
-            @RequestParam String content) {
+    public ResponseEntity<String> sendMessage(@RequestParam String sender, @RequestParam String content) {
         try {
             String receiver;
+            String messageContent = content;
 
             if (sender.equalsIgnoreCase("Admin") && content.startsWith("(")) {
-                receiver = content.substring(1, content.indexOf(")")).trim();
+                int endIndex = content.indexOf(")");
+                receiver = content.substring(1, endIndex).trim();
+                messageContent = content.substring(endIndex + 1).trim();
             } else {
                 receiver = sender;
             }
@@ -31,7 +34,7 @@ public class ChatController {
 
             Map<String, Object> message = new HashMap<>();
             message.put("sender", sender);
-            message.put("content", content);
+            message.put("content", messageContent);
             message.put("timestamp", System.currentTimeMillis());
 
             ref.push().setValueAsync(message);
@@ -96,4 +99,5 @@ public class ChatController {
             return ResponseEntity.status(500).body("Không thể lấy tin nhắn: " + e.getMessage());
         }
     }
+
 }

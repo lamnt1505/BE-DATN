@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/votes", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProductVotesRestController {
+public class ProductVotesController {
 
     @Autowired
     ProductVotesService productVotesService;

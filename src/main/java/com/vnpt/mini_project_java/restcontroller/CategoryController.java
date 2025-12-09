@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/category", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CategoryRestController {
+public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value ="/api/logs", produces = MediaType.APPLICATION_JSON_VALUE)
-public class LogRestController {
+public class LogController {
 
     @GetMapping("/read")
     public ResponseEntity<?> readLogs(@RequestParam(defaultValue = "0") int page,

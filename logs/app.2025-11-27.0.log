@@ -800,7 +800,7 @@ This generated password is for development use only. Your security configuration
 2025-11-27 20:26:56.258 [http-nio-8080-exec-6] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.RuntimeException: ] with root cause
 java.lang.RuntimeException: 
 	at com.vnpt.mini_project_java.service.productDetail.ProductDetailServiceImpl.createProductDetail(ProductDetailServiceImpl.java:50)
-	at com.vnpt.mini_project_java.restcontroller.ProductDetailRestController.createProductDetail(ProductDetailRestController.java:42)
+	at com.vnpt.mini_project_java.restcontroller.ProductDetailController.createProductDetail(ProductDetailRestController.java:42)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -892,7 +892,7 @@ java.lang.RuntimeException:
 2025-11-27 20:38:38.748 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.RuntimeException: ] with root cause
 java.lang.RuntimeException: 
 	at com.vnpt.mini_project_java.service.productDetail.ProductDetailServiceImpl.createProductDetail(ProductDetailServiceImpl.java:50)
-	at com.vnpt.mini_project_java.restcontroller.ProductDetailRestController.createProductDetail(ProductDetailRestController.java:42)
+	at com.vnpt.mini_project_java.restcontroller.ProductDetailController.createProductDetail(ProductDetailRestController.java:42)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -984,7 +984,7 @@ java.lang.RuntimeException:
 2025-11-27 20:39:37.902 [http-nio-8080-exec-7] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.RuntimeException: ] with root cause
 java.lang.RuntimeException: 
 	at com.vnpt.mini_project_java.service.productDetail.ProductDetailServiceImpl.createProductDetail(ProductDetailServiceImpl.java:50)
-	at com.vnpt.mini_project_java.restcontroller.ProductDetailRestController.createProductDetail(ProductDetailRestController.java:42)
+	at com.vnpt.mini_project_java.restcontroller.ProductDetailController.createProductDetail(ProductDetailRestController.java:42)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

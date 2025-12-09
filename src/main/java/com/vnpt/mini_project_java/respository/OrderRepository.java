@@ -1,6 +1,7 @@
 package com.vnpt.mini_project_java.respository;
 
 import com.vnpt.mini_project_java.dto.PaymentStatisticDTO;
+import com.vnpt.mini_project_java.entity.Account;
 import com.vnpt.mini_project_java.entity.Order;
 import com.vnpt.mini_project_java.projections.StatisticalForMonthProjections;
 import com.vnpt.mini_project_java.projections.StatisticalForQuarterProjections;
@@ -122,7 +123,7 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     List<Order> findByOrderDateImportBetween(LocalDate start, LocalDate end);
 
-    List<Order> findTop5ByOrderByOrderDateImportDesc();
+    Order findTopByAccountOrderByOrderNumberDesc(Account account);
 
     Optional<Order> findByTxnRef(String txnRef);
 

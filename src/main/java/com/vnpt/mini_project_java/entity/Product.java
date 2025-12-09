@@ -148,12 +148,10 @@ public class Product {
                 '}';
     }
 
+    //kiểu dữ liệu liệt kê dùng cho thêm vào giỏ hàng(Enum)
     public enum CartUpdateStatus{
         SUCCESS,
         PRODUCT_NOT_FOUND,
         INVALID_AMOUNT,
-        INVALID_OPERATION,
-        PRODUCT_REMOVED,
-        QUANTITY_UPDATED,
     }
 }

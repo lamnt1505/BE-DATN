@@ -22,11 +22,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
-public class ReportsRestcontroller {
+public class ReportsController {
 
     private final StatisticalService statisticalService;
 
-    public ReportsRestcontroller(StatisticalService statisticalService) {
+    public ReportsController(StatisticalService statisticalService) {
         this.statisticalService = statisticalService;
     }
 

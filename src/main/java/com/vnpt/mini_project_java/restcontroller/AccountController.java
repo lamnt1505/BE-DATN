@@ -30,9 +30,9 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping(path = "/api/v1/account", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-public class AccountRestController {
+public class AccountController {
 
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AccountRestController.class);
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
     private static final Long MAIN_ADMIN_ID = 1L;
 
     @Autowired
