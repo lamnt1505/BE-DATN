@@ -79,7 +79,7 @@ public class AccountController {
         try {
             accountDTO.setAccountID(accountID);
             accountService.updateAccount(accountID, accountDTO);
-            return ResponseEntity.ok(Collections.singletonMap("message", "Cập nhật tài khoản thành công ✅"));
+            return ResponseEntity.ok(Collections.singletonMap("message", "Cập nhật tài khoản thành công"));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("message", e.getMessage()));

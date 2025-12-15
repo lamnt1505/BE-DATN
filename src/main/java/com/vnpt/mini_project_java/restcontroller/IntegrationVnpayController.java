@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-public class integrationVnpayController {
+public class IntegrationVnpayController {
 
     @Autowired
     private EmailService emailService;
@@ -117,7 +117,7 @@ public class integrationVnpayController {
 
         String txnRef = String.valueOf(System.currentTimeMillis()) +
                 "_" +
-                UUID.randomUUID().toString().substring(0, 8);
+                UUID.randomUUID().toString().substring(0, 8);//sinh ra mã giao dịch
 
         Order order = new Order();
         long millis = System.currentTimeMillis();
@@ -136,7 +136,7 @@ public class integrationVnpayController {
         order.setOrderTotal(total);
         order.setTxnRef(txnRef);
 
-        orderService.save(order);
+        orderService.save(order);// lưu đơn han
 
         Set<OrderDetail> setDetail = new HashSet<>();
         for (Product product : cart) {
@@ -146,7 +146,7 @@ public class integrationVnpayController {
             s.setPrice(product.getPrice());
             s.setOrder(order);
             setDetail.add(s);
-            orderDetailService.save(s);
+            orderDetailService.save(s);//lưu thông tin chi tiết đơn hàng
         }
         order.setOrderDetails(setDetail);
 
@@ -164,7 +164,7 @@ public class integrationVnpayController {
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping("/create-payment")
+    @PostMapping("/create-payment")// tạo link thanh toán
     @ResponseBody
     public ResponseEntity<?> createPayment(@RequestParam("txnRef") String txnRef,
                                            HttpServletRequest request) throws UnsupportedEncodingException {
@@ -236,7 +236,7 @@ public class integrationVnpayController {
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping("/vnpay-cancel/{txnRef}")
+    @PostMapping("/vnpay-cancel/{txnRef}")//nếu kh hủy thanh toán
     public ResponseEntity<?> vnpayCancelPayment(@PathVariable String txnRef) {
         try {
             Order order = orderService.findByTxnRef(txnRef);
@@ -269,7 +269,7 @@ public class integrationVnpayController {
         }
     }
 
-    @GetMapping("/check-payment-status/{txnRef}")
+    @GetMapping("/check-payment-status/{txnRef}")//check trạng thái thanh toán
     public ResponseEntity<?> checkPaymentStatus(@PathVariable String txnRef) {
         try {
             Order order = orderService.findByTxnRef(txnRef);
@@ -298,7 +298,7 @@ public class integrationVnpayController {
         }
     }
 
-    @GetMapping("/vnpay-return")
+    @GetMapping("/vnpay-return")//trả veef link thanh toán thành công với trạng thái chờ duyệt
     @ResponseBody
     public ResponseEntity<Map<String, Object>> vnpayReturn(HttpServletRequest request) {
         Logger logger = LoggerFactory.getLogger(this.getClass());

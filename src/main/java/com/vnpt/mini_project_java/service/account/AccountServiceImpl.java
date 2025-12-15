@@ -131,9 +131,20 @@ public class AccountServiceImpl implements AccountService {
 		}
 
 		account.setDateOfBirth(LocalDate.parse(accountDTO.getDateOfBirth(), DateTimeFormatter.ISO_DATE));
-		account.setEmail(accountDTO.getEmail());
+
+		if (!account.getEmail().equals(accountDTO.getEmail())) {
+			boolean emailExists = accountRepository.existsByEmail(accountDTO.getEmail());
+			if (emailExists) {
+				throw new RuntimeException("Email này đã được sử dụng bởi tài khoản khác");
+			}
+		}
 		account.setUsername(accountDTO.getUsername());
-		account.setPhoneNumber(accountDTO.getPhoneNumber());
+		if (!account.getPhoneNumber().equals(accountDTO.getPhoneNumber())) {
+			boolean phoneExists = accountRepository.existsByPhoneNumber(accountDTO.getPhoneNumber());
+			if (phoneExists) {
+				throw new RuntimeException("Số điện thoại này đã được sử dụng bởi tài khoản khác");
+			}
+		}
 		account.setLocal(accountDTO.getLocal());
 
 		if (accountDTO.getImage() != null && accountDTO.getImage().startsWith("data:image")) {

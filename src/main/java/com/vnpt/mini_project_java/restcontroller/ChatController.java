@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
-
     @PostMapping("/send")
     public ResponseEntity<String> sendMessage(@RequestParam String sender, @RequestParam String content) {
         try {
@@ -99,5 +98,4 @@ public class ChatController {
             return ResponseEntity.status(500).body("Không thể lấy tin nhắn: " + e.getMessage());
         }
     }
-
 }

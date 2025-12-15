@@ -1,35 +1,361 @@
-2025-12-09 09:54:30.873 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
-2025-12-09 09:54:30.934 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Starting MiniProjectJavaApplication using Java 1.8.0_462 on Admin-PC with PID 16712 (F:\BE-QLBH\target\classes started by Admin in F:\BE-QLBH)
-2025-12-09 09:54:30.938 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - No active profile set, falling back to 1 default profile: "default"
-2025-12-09 09:54:31.078 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-12-09 09:54:31.079 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-12-09 09:54:35.369 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-12-09 09:54:35.582 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 194 ms. Found 17 JPA repository interfaces.
-2025-12-09 09:54:38.710 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2025-12-09 09:54:38.731 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2025-12-09 09:54:38.732 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-12-09 09:54:38.732 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.71]
-2025-12-09 09:54:38.919 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-12-09 09:54:38.920 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 7839 ms
-2025-12-09 09:54:39.384 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-12-09 09:54:39.952 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-12-09 09:54:39.962 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/datn?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false'
-2025-12-09 09:54:41.302 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-12-09 09:54:41.465 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
-2025-12-09 09:54:41.911 [restartedMain] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2025-12-09 09:54:42.345 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
-2025-12-09 09:54:48.148 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2025-12-09 09:54:48.187 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-12-09 09:54:49.428 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-12-09 09:54:52.724 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+2025-12-13 10:10:50.630 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
+2025-12-13 10:10:50.670 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Starting MiniProjectJavaApplication using Java 1.8.0_462 on Admin-PC with PID 5792 (F:\BE-QLBH\target\classes started by Admin in F:\BE-QLBH)
+2025-12-13 10:10:50.671 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-13 10:10:50.765 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-13 10:10:50.765 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-13 10:10:54.053 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-13 10:10:54.506 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 408 ms. Found 17 JPA repository interfaces.
+2025-12-13 10:10:57.472 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-13 10:10:57.483 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-13 10:10:57.483 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-13 10:10:57.484 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.71]
+2025-12-13 10:10:57.590 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-13 10:10:57.591 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 6824 ms
+2025-12-13 10:10:57.808 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-13 10:10:58.217 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-13 10:10:58.224 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/datn?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false'
+2025-12-13 10:10:58.496 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-13 10:10:58.591 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
+2025-12-13 10:10:58.905 [restartedMain] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-13 10:10:59.112 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2025-12-13 10:11:00.620 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-13 10:11:00.632 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 10:11:01.022 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-13 10:11:03.072 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
 
-Using generated security password: e765ab0e-acd0-477b-9d7b-404dd862b6f9
+Using generated security password: aa4f8567-f92f-4864-a099-1f1456213310
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2025-12-09 09:54:53.172 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@66ca6f7c, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3e0ae4f4, org.springframework.security.web.context.SecurityContextPersistenceFilter@1d3534a8, org.springframework.security.web.header.HeaderWriterFilter@52f12d22, org.springframework.security.web.authentication.logout.LogoutFilter@65294355, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1ad0b535, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@e448cf2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@38436806, org.springframework.security.web.session.SessionManagementFilter@13a72a03, org.springframework.security.web.access.ExceptionTranslationFilter@35d56fb5, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@cf53301]
-2025-12-09 09:54:59.594 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2025-12-09 09:54:59.602 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
-2025-12-09 09:54:59.665 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2025-12-09 09:54:59.707 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2025-12-09 09:54:59.748 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Started MiniProjectJavaApplication in 30.017 seconds (JVM running for 47.147)
+2025-12-13 10:11:03.305 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@aab3b7, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@71d60c5, org.springframework.security.web.context.SecurityContextPersistenceFilter@44093e06, org.springframework.security.web.header.HeaderWriterFilter@69b451c, org.springframework.security.web.authentication.logout.LogoutFilter@6f82d38e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4cdb64a7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4285ecdf, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@70b0431, org.springframework.security.web.session.SessionManagementFilter@1c9deeb2, org.springframework.security.web.access.ExceptionTranslationFilter@232055c5, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@25398e17]
+2025-12-13 10:11:06.579 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-12-13 10:11:06.586 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-12-13 10:11:06.620 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-13 10:11:06.641 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-13 10:11:06.676 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Started MiniProjectJavaApplication in 16.872 seconds (JVM running for 29.183)
+2025-12-13 10:11:06.862 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-13 10:11:06.862 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-13 10:11:06.863 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-12-13 10:13:30.496 [http-nio-8080-exec-10] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'iPhone 15 Pro Max 256GB' Vào Giỏ Hàng
+2025-12-13 10:13:30.496 [http-nio-8080-exec-10] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'iPhone 15 Pro Max 256GB' Vào Giỏ Hàng
+2025-12-13 10:14:43.101 [http-nio-8080-exec-3] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'iPad Pro 12.9 inch M2 256GB' Vào Giỏ Hàng
+2025-12-13 10:14:43.101 [http-nio-8080-exec-3] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'iPad Pro 12.9 inch M2 256GB' Vào Giỏ Hàng
+2025-12-13 10:16:33.902 [http-nio-8080-exec-2] WARN  c.v.m.r.AccountController - Đăng nhập thất bại cho tài khoản: KH05
+2025-12-13 10:16:45.024 [http-nio-8080-exec-5] WARN  c.v.m.r.AccountController - Đăng nhập thất bại cho tài khoản: KH05
+2025-12-13 10:16:54.226 [http-nio-8080-exec-2] WARN  c.v.m.r.AccountController - Đăng nhập thất bại cho tài khoản: KH051
+2025-12-13 10:17:02.440 [http-nio-8080-exec-5] INFO  c.v.m.r.AccountController - Người dùng [KH05] đã đăng nhập thành công lúc 2025-12-13T10:17:02.440
+2025-12-13 10:17:22.707 [http-nio-8080-exec-9] INFO  c.v.m.r.IntegrationVnpayController - Found account from header: 11
+2025-12-13 10:17:22.707 [http-nio-8080-exec-9] INFO  c.v.m.r.IntegrationVnpayController - Tổng tiền (sau giảm giá): 6.298E7
+2025-12-13 10:19:34.242 [http-nio-8080-exec-5] WARN  c.v.m.r.AccountController - Đăng nhập thất bại cho tài khoản: demo_admin
+2025-12-13 10:19:39.392 [http-nio-8080-exec-8] WARN  c.v.m.r.AccountController - Đăng nhập thất bại cho tài khoản: demo_admin
+2025-12-13 10:19:50.890 [http-nio-8080-exec-9] INFO  c.v.m.r.AccountController - Người dùng [demo_admin] đã đăng nhập thành công lúc 2025-12-13T10:19:50.890
+2025-12-13 10:20:43.490 [http-nio-8080-exec-2] INFO  c.v.m.r.ProductController - Người dùng 6 đang xóa sản phẩm có ID: {}
+2025-12-13 10:22:13.369 [http-nio-8080-exec-2] INFO  c.v.m.r.ProductController - Người dùng đã thêm một sản phẩm mới. ID sản phẩm: 19, Tên sản phẩm: Màn hình DELL P2722H
+2025-12-13 10:23:33.543 [http-nio-8080-exec-4] INFO  c.v.m.r.AccountController - Người dùng [demo_employee] đã đăng nhập thành công lúc 2025-12-13T10:23:33.543
+2025-12-13 10:27:01.369 [http-nio-8080-exec-2] INFO  c.v.m.restcontroller.OrderController - Người dùng 'demo_employee' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 10:27:01.370 [http-nio-8080-exec-2] INFO  c.v.m.restcontroller.OrderController - Người dùng 'demo_employee' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 10:27:07.099 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - ========== BẮT ĐẦU TẠO ĐƠN HÀNG MỚI ==========
+2025-12-13 10:27:07.099 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - Thời gian: 2025-12-13T10:27:07.099
+2025-12-13 10:27:07.102 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - Found account from header: 11
+2025-12-13 10:27:07.102 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - Người dùng: KH05 (ID: 11)
+2025-12-13 10:27:07.102 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - Thông tin đơn hàng:
+2025-12-13 10:27:07.102 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - -Người nhận: demoKH05
+2025-12-13 10:27:07.102 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - -Phương thức thanh toán: COD
+2025-12-13 10:27:07.112 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - Lưu đơn hàng thành công (ID: 105, OrderNumber 6)
+2025-12-13 10:27:07.112 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - 📩 Đã gửi email xác nhận đơn hàng đến lamnguyen4799@gmail.com
+2025-12-13 10:27:07.116 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - Tạo {} chi tiết đơn hàng
+2025-12-13 10:27:07.116 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - TẠO ĐƠN HÀNG THÀNH CÔNG
+2025-12-13 10:27:07.116 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - Created Order ID 105 with txnRef 1765596427102
+2025-12-13 10:27:07.116 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController -    - Người tạo: KH05 (ID: 11)
+2025-12-13 10:27:07.116 [http-nio-8080-exec-9] INFO  c.v.m.restcontroller.OrderController - ========== KẾT THÚC TẠO ĐƠN HÀNG ==========
+
+2025-12-13 10:27:17.608 [http-nio-8080-exec-3] INFO  c.v.m.restcontroller.OrderController - 📧 Đã gửi email hủy đơn hàng đến lamnguyen4799@gmail.com
+2025-12-13 10:28:09.870 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 10:28:09.878 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-13 10:28:09.893 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-13 10:28:24.205 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
+2025-12-13 10:28:24.235 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Starting MiniProjectJavaApplication using Java 1.8.0_462 on Admin-PC with PID 8868 (F:\BE-QLBH\target\classes started by Admin in F:\BE-QLBH)
+2025-12-13 10:28:24.236 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-13 10:28:24.309 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-13 10:28:24.309 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-13 10:28:25.528 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-13 10:28:25.665 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 123 ms. Found 17 JPA repository interfaces.
+2025-12-13 10:28:27.570 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-13 10:28:27.584 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-13 10:28:27.585 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-13 10:28:27.585 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.71]
+2025-12-13 10:28:27.779 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-13 10:28:27.779 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3470 ms
+2025-12-13 10:28:28.024 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-13 10:28:28.321 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-13 10:28:28.333 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/datn?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false'
+2025-12-13 10:28:28.650 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-13 10:28:28.762 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
+2025-12-13 10:28:28.971 [restartedMain] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-13 10:28:29.167 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2025-12-13 10:28:30.646 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-13 10:28:30.661 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 10:28:31.037 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-13 10:28:32.551 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 792469bf-d981-40b2-9952-7d19a6dac693
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-12-13 10:28:32.738 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2826ae18, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1d529d86, org.springframework.security.web.context.SecurityContextPersistenceFilter@1468a516, org.springframework.security.web.header.HeaderWriterFilter@5a0bf7b, org.springframework.security.web.authentication.logout.LogoutFilter@143d187d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@db4adb1, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@72cacd73, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@247e110a, org.springframework.security.web.session.SessionManagementFilter@704d067f, org.springframework.security.web.access.ExceptionTranslationFilter@67dab9c9, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@17be0e7f]
+2025-12-13 10:28:34.108 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-12-13 10:28:34.114 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-12-13 10:28:34.143 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-13 10:28:34.159 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-13 10:28:34.175 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Started MiniProjectJavaApplication in 10.684 seconds (JVM running for 12.033)
+2025-12-13 10:28:34.995 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-13 10:28:34.996 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-13 10:28:34.997 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-12-13 10:31:46.789 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 10:31:46.793 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-13 10:31:46.804 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-13 10:32:45.175 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
+2025-12-13 10:32:45.186 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Starting MiniProjectJavaApplication using Java 1.8.0_462 on Admin-PC with PID 16316 (F:\BE-QLBH\target\classes started by Admin in F:\BE-QLBH)
+2025-12-13 10:32:45.187 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-13 10:32:45.285 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-13 10:32:45.285 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-13 10:32:46.259 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-13 10:32:46.369 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 102 ms. Found 17 JPA repository interfaces.
+2025-12-13 10:32:48.105 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-13 10:32:48.121 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-13 10:32:48.122 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-13 10:32:48.122 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.71]
+2025-12-13 10:32:48.254 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-13 10:32:48.255 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2969 ms
+2025-12-13 10:32:48.468 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-13 10:32:48.691 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-13 10:32:48.709 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/dant_dtu?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false'
+2025-12-13 10:32:49.022 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-13 10:32:49.110 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
+2025-12-13 10:32:49.354 [restartedMain] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-13 10:32:49.540 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2025-12-13 10:32:51.008 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-13 10:32:51.017 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 10:32:51.325 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-13 10:32:52.576 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 0c685219-dbc8-476b-8d03-a6852a4828db
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-12-13 10:32:52.713 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@599a2ab4, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4b392318, org.springframework.security.web.context.SecurityContextPersistenceFilter@440862a7, org.springframework.security.web.header.HeaderWriterFilter@7a344b3f, org.springframework.security.web.authentication.logout.LogoutFilter@2a3226f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6f1bdf29, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2597ea9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2742ea23, org.springframework.security.web.session.SessionManagementFilter@6f3a6639, org.springframework.security.web.access.ExceptionTranslationFilter@336fcaad, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@11a37426]
+2025-12-13 10:32:53.868 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-12-13 10:32:53.873 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-12-13 10:32:53.898 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-13 10:32:53.909 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-13 10:32:53.928 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Started MiniProjectJavaApplication in 9.526 seconds (JVM running for 10.598)
+2025-12-13 10:32:55.488 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-13 10:32:55.489 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-13 10:32:55.490 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-12-13 10:35:34.160 [http-nio-8080-exec-2] INFO  c.v.m.r.AccountController - Người dùng [admin] đã đăng nhập thành công lúc 2025-12-13T10:35:34.160
+2025-12-13 10:36:26.356 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 10:36:26.362 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-13 10:36:26.379 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-13 15:59:44.133 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
+2025-12-13 15:59:44.194 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Starting MiniProjectJavaApplication using Java 1.8.0_462 on Admin-PC with PID 16284 (F:\BE-QLBH\target\classes started by Admin in F:\BE-QLBH)
+2025-12-13 15:59:45.447 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-13 15:59:45.572 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-13 15:59:45.572 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-13 15:59:50.272 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-13 15:59:50.516 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 220 ms. Found 17 JPA repository interfaces.
+2025-12-13 15:59:54.797 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-13 15:59:54.817 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-13 15:59:54.817 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-13 15:59:54.819 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.71]
+2025-12-13 15:59:54.954 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-13 15:59:54.955 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 9383 ms
+2025-12-13 15:59:55.177 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-13 15:59:55.524 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-13 15:59:55.524 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/dant_dtu?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false'
+2025-12-13 15:59:55.873 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-13 15:59:55.979 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
+2025-12-13 15:59:56.333 [restartedMain] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-13 15:59:56.618 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2025-12-13 15:59:58.258 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-13 15:59:58.280 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 15:59:58.765 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-13 16:00:00.945 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 07fc721b-b130-4c22-ae28-848e580fb504
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-12-13 16:00:01.537 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7b278caa, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5ffaf03b, org.springframework.security.web.context.SecurityContextPersistenceFilter@28f185c6, org.springframework.security.web.header.HeaderWriterFilter@6b215, org.springframework.security.web.authentication.logout.LogoutFilter@9f0d7cd, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2ab762b2, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@8b79914, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@17042fc0, org.springframework.security.web.session.SessionManagementFilter@1b57186a, org.springframework.security.web.access.ExceptionTranslationFilter@41ef8beb, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@42ba04c8]
+2025-12-13 16:00:05.133 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-12-13 16:00:05.146 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-12-13 16:00:05.185 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-13 16:00:05.208 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-13 16:00:05.234 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Started MiniProjectJavaApplication in 23.394 seconds (JVM running for 25.365)
+2025-12-13 16:00:06.022 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-13 16:00:06.025 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-13 16:00:06.035 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 10 ms
+2025-12-13 16:00:50.329 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 16:00:50.335 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-13 16:00:50.359 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-13 16:34:48.750 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
+2025-12-13 16:34:48.789 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Starting MiniProjectJavaApplication using Java 1.8.0_462 on Admin-PC with PID 20700 (F:\BE-QLBH\target\classes started by Admin in F:\BE-QLBH)
+2025-12-13 16:34:48.797 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-13 16:34:48.876 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-13 16:34:48.876 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-13 16:34:51.210 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-13 16:34:51.353 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 124 ms. Found 17 JPA repository interfaces.
+2025-12-13 16:34:53.363 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-12-13 16:34:53.409 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-12-13 16:34:53.409 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-13 16:34:53.409 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.71]
+2025-12-13 16:34:53.512 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-13 16:34:53.512 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 4636 ms
+2025-12-13 16:34:53.816 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-13 16:34:54.099 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-13 16:34:54.113 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/dant_dtu?useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false'
+2025-12-13 16:34:54.436 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-13 16:34:54.525 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
+2025-12-13 16:34:54.856 [restartedMain] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-13 16:34:55.094 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2025-12-13 16:34:57.019 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-13 16:34:57.034 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 16:34:57.543 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-13 16:34:59.258 [restartedMain] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 57e48726-5675-4804-8d66-3a82ea433ff7
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-12-13 16:34:59.532 [restartedMain] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@421ca565, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6ba105fc, org.springframework.security.web.context.SecurityContextPersistenceFilter@777152ea, org.springframework.security.web.header.HeaderWriterFilter@5d8f3642, org.springframework.security.web.authentication.logout.LogoutFilter@4ae929a5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@17a3e5ec, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@32219349, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@70b0e65, org.springframework.security.web.session.SessionManagementFilter@235f8984, org.springframework.security.web.access.ExceptionTranslationFilter@7ef577d3, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1888d030]
+2025-12-13 16:35:03.841 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-12-13 16:35:03.850 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-12-13 16:35:03.885 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-12-13 16:35:03.901 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-13 16:35:03.921 [restartedMain] INFO  c.v.m.MiniProjectJavaApplication - Started MiniProjectJavaApplication in 16.099 seconds (JVM running for 29.454)
+2025-12-13 16:36:57.218 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-13 16:36:57.218 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-13 16:36:57.223 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 5 ms
+2025-12-13 16:58:23.342 [http-nio-8080-exec-3] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 16:58:23.351 [http-nio-8080-exec-3] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 16:58:23.575 [http-nio-8080-exec-4] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 16:58:23.575 [http-nio-8080-exec-4] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 16:58:39.475 [http-nio-8080-exec-10] INFO  c.v.m.r.AccountController - Người dùng [admin] đã đăng nhập thành công lúc 2025-12-13T16:58:39.475
+2025-12-13 17:20:44.614 [http-nio-8080-exec-8] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
+java.lang.NullPointerException: null
+	at com.vnpt.mini_project_java.restcontroller.OrderController.updateQuantity(OrderController.java:132)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1071)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:696)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:337)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:115)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:81)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:122)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:126)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:81)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:109)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:149)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:112)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:82)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:221)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:186)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.boot.actuate.metrics.web.servlet.WebMvcMetricsFilter.doFilterInternal(WebMvcMetricsFilter.java:96)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:891)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1784)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:750)
+2025-12-13 17:20:53.656 [http-nio-8080-exec-5] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 17:20:53.656 [http-nio-8080-exec-5] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 17:21:05.283 [http-nio-8080-exec-10] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 17:21:05.283 [http-nio-8080-exec-10] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 18:44:44.323 [http-nio-8080-exec-5] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'iPhone 15 Pro Max 256GB' Vào Giỏ Hàng
+2025-12-13 18:44:44.324 [http-nio-8080-exec-5] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'iPhone 15 Pro Max 256GB' Vào Giỏ Hàng
+2025-12-13 18:45:24.913 [http-nio-8080-exec-6] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'iPhone 15 Pro Max 256GB' Vào Giỏ Hàng
+2025-12-13 18:45:24.913 [http-nio-8080-exec-6] INFO  c.v.m.restcontroller.OrderController - Người dùng 'Khách Hàng' đã mua 1 Đơn Vị Sản Phẩm 'iPhone 15 Pro Max 256GB' Vào Giỏ Hàng
+2025-12-13 18:46:35.657 [http-nio-8080-exec-4] WARN  c.v.m.r.AccountController - Đăng nhập thất bại cho tài khoản: KH02
+2025-12-13 18:46:44.779 [http-nio-8080-exec-5] WARN  c.v.m.r.AccountController - Đăng nhập thất bại cho tài khoản: KH02
+2025-12-13 18:46:57.592 [http-nio-8080-exec-2] INFO  c.v.m.r.AccountController - Người dùng [KH02] đã đăng nhập thành công lúc 2025-12-13T18:46:57.592
+2025-12-13 18:47:41.212 [http-nio-8080-exec-4] INFO  c.v.m.r.IntegrationVnpayController - Found account from header: 9
+2025-12-13 18:47:41.212 [http-nio-8080-exec-4] INFO  c.v.m.r.IntegrationVnpayController - Tổng tiền (sau giảm giá): 5.27824E7
+2025-12-13 18:49:41.477 [http-nio-8080-exec-6] INFO  c.v.m.restcontroller.OrderController - 📧 Đã gửi email hủy đơn hàng đến lamnguyen4892@gmail.com
+2025-12-13 18:49:56.140 [http-nio-8080-exec-3] INFO  c.v.m.restcontroller.OrderController - Người dùng 'KH02' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 18:49:56.140 [http-nio-8080-exec-3] INFO  c.v.m.restcontroller.OrderController - Người dùng 'KH02' đã mua 1 Đơn Vị Sản Phẩm 'Samsung Galaxy A54 5G' Vào Giỏ Hàng
+2025-12-13 18:50:01.763 [http-nio-8080-exec-4] INFO  c.v.m.r.IntegrationVnpayController - Found account from header: 9
+2025-12-13 18:50:01.763 [http-nio-8080-exec-4] INFO  c.v.m.r.IntegrationVnpayController - Tổng tiền (sau giảm giá): 1.099E7
+2025-12-13 18:51:00.817 [http-nio-8080-exec-7] WARN  c.v.m.r.AccountController - Đăng nhập thất bại cho tài khoản: admin
+2025-12-13 18:51:06.151 [http-nio-8080-exec-10] INFO  c.v.m.r.AccountController - Người dùng [admin] đã đăng nhập thành công lúc 2025-12-13T18:51:06.151
+2025-12-13 18:51:40.369 [http-nio-8080-exec-7] INFO  c.v.m.r.AccountController - ✅ Phân quyền thành công: Admin='null' đã thay đổi role của 'KH02' từ 'USER' thành 'EMPLOYEE'
+2025-12-13 18:51:57.584 [http-nio-8080-exec-6] INFO  c.v.m.r.AccountController - Người dùng [KH02] đã đăng nhập thành công lúc 2025-12-13T18:51:57.584
+2025-12-13 18:52:21.385 [http-nio-8080-exec-10] INFO  c.v.m.r.AccountController - Người dùng [admin] đã đăng nhập thành công lúc 2025-12-13T18:52:21.385
+2025-12-13 18:54:09.609 [http-nio-8080-exec-9] INFO  c.v.m.r.ProductController - Người dùng 1 đang xóa sản phẩm có ID: {}
+2025-12-13 18:56:50.373 [http-nio-8080-exec-2] INFO  c.v.m.r.ProductController - Người dùng đã thêm một sản phẩm mới. ID sản phẩm: 17, Tên sản phẩm: LAPTOP DELL G3 3500
+2025-12-13 19:16:49.753 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-13 19:16:49.763 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-13 19:16:49.767 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

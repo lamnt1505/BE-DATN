@@ -207,7 +207,7 @@ public class ProductController {
 
     @GetMapping("/paginated")
     public Page<ProductDTO> getProducts(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "productID,asc") String[] sort) {
+            @RequestParam(defaultValue = "productID,desc") String[] sort) {
         Sort.Direction sortDirection = Sort.Direction.fromString(sort[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort[0]));
         return productService.getPaginatedProducts(pageable);

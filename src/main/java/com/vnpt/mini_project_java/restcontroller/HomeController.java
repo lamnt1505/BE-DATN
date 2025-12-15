@@ -216,7 +216,7 @@ public class HomeController {
     public ResponseEntity<Page<ProductDTO>> getPaginatedProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,
-            @RequestParam(defaultValue = "productID,asc") String[] sort) {
+            @RequestParam(defaultValue = "productID,desc") String[] sort) {
 
         String[] sortParams = sort.clone();
         String sortField = sortParams[0];
